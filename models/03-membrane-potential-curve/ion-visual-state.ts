@@ -52,7 +52,7 @@ export function getIonVisualState(
     },
     sodiumCrossing: snapshot.ionFlow === "sodium-in" && snapshot.sodiumOpen,
     potassiumCrossing: snapshot.ionFlow === "potassium-out" && snapshot.potassiumOpen,
-    stimulusActive: time >= 0.95 && time < 1.5,
+    stimulusActive: time >= 1 && time < 2,
     stimulusLevel: intensity,
   };
 }

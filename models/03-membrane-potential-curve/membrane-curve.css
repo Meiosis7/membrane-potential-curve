@@ -411,6 +411,42 @@
   bottom: 10px;
 }
 
+.membrane-ion-counts {
+  position: absolute;
+  z-index: 7;
+  top: 8px;
+  right: 9px;
+  display: flex;
+  gap: 5px;
+  animation: ion-count-pop 360ms ease-out;
+}
+
+.membrane-ion-counts > b {
+  padding: 3px 7px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .9);
+  box-shadow: 0 3px 10px rgba(24, 49, 59, .08);
+  font-size: 9px;
+  font-weight: 850;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.membrane-ion-counts > b.sodium {
+  color: var(--mem-sodium);
+}
+
+.membrane-ion-counts > b.potassium {
+  color: var(--mem-potassium);
+}
+
+@keyframes ion-count-pop {
+  0% { opacity: .35; transform: scale(.82); }
+  60% { transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
 .membrane-particle {
   position: absolute;
   z-index: 2;
@@ -617,6 +653,29 @@
   left: auto;
 }
 
+.membrane-ion-stream::before {
+  position: absolute;
+  z-index: 1;
+  top: 24px;
+  bottom: 24px;
+  left: 50%;
+  width: 10px;
+  border: 1px solid color-mix(in srgb, var(--stream-color) 52%, white);
+  border-radius: 999px;
+  content: "";
+  transform: translateX(-50%);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in srgb, var(--stream-color) 18%, transparent) 22%,
+    color-mix(in srgb, var(--stream-color) 34%, transparent) 50%,
+    color-mix(in srgb, var(--stream-color) 18%, transparent) 78%,
+    transparent
+  );
+  box-shadow: 0 0 14px color-mix(in srgb, var(--stream-color) 32%, transparent);
+  animation: ion-path-glow 780ms ease-in-out infinite alternate;
+}
+
 .membrane-ion-stream strong {
   position: absolute;
   z-index: 4;
@@ -644,11 +703,12 @@
 .membrane-crossing-ion {
   z-index: 13;
   left: 50%;
-  width: 30px;
-  height: 30px;
+  width: 38px;
+  height: 38px;
   border: 2px solid rgba(255, 255, 255, .92);
   box-shadow: 0 4px 13px color-mix(in srgb, var(--stream-color) 34%, transparent);
-  animation: sodium-cross-membrane 1.26s linear infinite;
+  font-size: 10px;
+  animation: sodium-cross-membrane 1.6s linear infinite;
 }
 
 .membrane-crossing-ion > span {
@@ -670,21 +730,26 @@
 }
 
 @keyframes sodium-cross-membrane {
-  0% { top: 10%; opacity: 0; transform: translate(-50%, -50%) scale(.82); }
+  0% { top: 10%; opacity: 0; transform: translate(-50%, -50%) scale(1); }
   12% { opacity: 1; }
   48% { top: 45%; transform: translate(-50%, -50%) scale(1.08); }
   62% { top: 58%; transform: translate(-50%, -50%) scale(1.08); }
   88% { opacity: 1; }
-  100% { top: 90%; opacity: 0; transform: translate(-50%, -50%) scale(.82); }
+  100% { top: 90%; opacity: 0; transform: translate(-50%, -50%) scale(1); }
 }
 
 @keyframes potassium-cross-membrane {
-  0% { top: 90%; opacity: 0; transform: translate(-50%, -50%) scale(.82); }
+  0% { top: 90%; opacity: 0; transform: translate(-50%, -50%) scale(1); }
   12% { opacity: 1; }
   48% { top: 58%; transform: translate(-50%, -50%) scale(1.08); }
   62% { top: 45%; transform: translate(-50%, -50%) scale(1.08); }
   88% { opacity: 1; }
-  100% { top: 10%; opacity: 0; transform: translate(-50%, -50%) scale(.82); }
+  100% { top: 10%; opacity: 0; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes ion-path-glow {
+  from { opacity: .48; transform: translateX(-50%) scaleX(.72); }
+  to { opacity: .94; transform: translateX(-50%) scaleX(1.08); }
 }
 
 .membrane-stimulus {
@@ -692,7 +757,7 @@
   z-index: 15;
   top: 0;
   left: 50%;
-  width: 54px;
+  width: 70px;
   height: 46%;
   transform: translateX(-50%);
   pointer-events: none;
@@ -708,13 +773,13 @@
   position: absolute;
   top: 7px;
   left: 50%;
-  padding: 3px 8px;
-  border: 1px solid var(--mem-curve);
+  padding: 4px 10px;
+  border: 2px solid var(--mem-curve);
   border-radius: 999px;
   transform: translateX(-50%);
   color: #a63f31;
   background: rgba(255, 247, 244, .94);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 850;
   white-space: nowrap;
 }
@@ -724,21 +789,21 @@
   top: 31px;
   bottom: 1px;
   left: 50%;
-  width: 3px;
+  width: 5px;
   border-radius: 999px;
   transform: translateX(-50%);
   background: linear-gradient(var(--mem-curve), #f8b44b);
-  box-shadow: 0 0 12px rgba(239, 106, 87, .6);
+  box-shadow: 0 0 8px #fff, 0 0 20px rgba(239, 106, 87, .92);
   animation: stimulus-electrode 520ms ease-in-out infinite alternate;
 }
 
 .membrane-stimulus > b {
   position: absolute;
-  right: 5px;
-  bottom: -9px;
-  width: 22px;
-  height: 22px;
-  border: 3px solid var(--mem-curve);
+  right: 3px;
+  bottom: -15px;
+  width: 34px;
+  height: 34px;
+  border: 4px solid var(--mem-curve);
   border-radius: 50%;
   animation: stimulus-ring 720ms ease-out infinite;
 }
@@ -1339,6 +1404,17 @@
     bottom: 4px;
   }
 
+  .membrane-ion-counts {
+    top: 4px;
+    right: 5px;
+    gap: 3px;
+  }
+
+  .membrane-ion-counts > b {
+    padding: 2px 4px;
+    font-size: 7px;
+  }
+
   .membrane-particle {
     width: 22px;
     height: 22px;
@@ -1391,32 +1467,32 @@
   }
 
   .membrane-crossing-ion {
-    width: 23px;
-    height: 23px;
-    font-size: 6px;
+    width: 30px;
+    height: 30px;
+    font-size: 8px;
   }
 
   .membrane-stimulus {
-    width: 44px;
+    width: 60px;
   }
 
   .membrane-stimulus > span {
     top: 3px;
-    padding: 2px 6px;
-    font-size: 7px;
+    padding: 3px 8px;
+    font-size: 9px;
   }
 
   .membrane-stimulus > i {
     top: 23px;
-    width: 2px;
+    width: 4px;
   }
 
   .membrane-stimulus > b {
-    right: 4px;
-    bottom: -7px;
-    width: 17px;
-    height: 17px;
-    border-width: 2px;
+    right: 1px;
+    bottom: -12px;
+    width: 28px;
+    height: 28px;
+    border-width: 3px;
   }
 
   .membrane-polarity-bar {

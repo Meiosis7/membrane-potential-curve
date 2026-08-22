@@ -24,6 +24,37 @@ test("membrane scene contains a stimulus pulse and labelled crossing ions", asyn
   assert.match(view, />K⁺</);
 });
 
+test("stimulus pulse is large enough to remain visually obvious", async () => {
+  const css = await source("membrane-curve.css");
+
+  assert.match(css, /\.membrane-stimulus\s*\{[^}]*width:\s*70px/s);
+  assert.match(css, /\.membrane-stimulus > i\s*\{[^}]*width:\s*5px/s);
+  assert.match(css, /\.membrane-stimulus > b\s*\{[^}]*width:\s*34px/s);
+});
+
+test("compartment ion counts are numerically visible", async () => {
+  const view = await source("MembraneView.tsx");
+
+  assert.match(view, /membrane-ion-counts/);
+  assert.match(view, /膜外 Na⁺/);
+  assert.match(view, /膜内 Na⁺/);
+});
+
+test("crossing ions are large and continuous without an arrow", async () => {
+  const view = await source("MembraneView.tsx");
+  const css = await source("membrane-curve.css");
+
+  assert.match(view, /const CROSSING_DELAYS = \[[^\]]*(?:,[^\]]*){3}\]/s);
+  assert.match(css, /\.membrane-ion-stream::before/);
+  assert.match(css, /\.membrane-crossing-ion\s*\{[^}]*width:\s*38px/s);
+  assert.match(
+    css,
+    /@media \(max-width: 800px\)[\s\S]*?\.membrane-crossing-ion\s*\{[^}]*width:\s*30px/s,
+  );
+  assert.doesNotMatch(css, /@keyframes sodium-cross-membrane[\s\S]*?scale\(\.82\)/);
+  assert.doesNotMatch(css, /@keyframes potassium-cross-membrane[\s\S]*?scale\(\.82\)/);
+});
+
 test("large directional arrow is removed from the membrane scene", async () => {
   const view = await source("MembraneView.tsx");
   const css = await source("membrane-curve.css");

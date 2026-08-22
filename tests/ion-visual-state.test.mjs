@@ -54,6 +54,8 @@ test("potassium-out stages move potassium particles from inside to outside", () 
 
 test("stimulus pulse appears only near the onset of voltage change", () => {
   assert.equal(getIonVisualState(1.2, "threshold", restingSnapshot).stimulusActive, true);
+  assert.equal(getIonVisualState(1.8, "threshold", restingSnapshot).stimulusActive, true);
+  assert.equal(getIonVisualState(2, "threshold", restingSnapshot).stimulusActive, false);
   assert.equal(getIonVisualState(2.4, "threshold", restingSnapshot).stimulusActive, false);
   assert.equal(getIonVisualState(1.2, "strong", restingSnapshot).stimulusLevel, "strong");
 });
