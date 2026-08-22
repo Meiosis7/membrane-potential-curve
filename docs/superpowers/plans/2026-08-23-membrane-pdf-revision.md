@@ -150,3 +150,39 @@ Run: fetch the public HTML and referenced CSS/JS assets.
 
 Expected: HTTP 200, title is “膜电位动态实验台”, and all sampled assets return HTTP 200.
 
+### Task 5: 可见性回归修订
+
+**Files:**
+- Modify: `tests/ion-visual-state.test.mjs`
+- Modify: `tests/pdf-revision-contract.test.mjs`
+- Modify: `models/03-membrane-potential-curve/ion-visual-state.ts`
+- Modify: `models/03-membrane-potential-curve/MembraneView.tsx`
+- Modify: `models/03-membrane-potential-curve/membrane-curve.css`
+
+**Interfaces:**
+- Consumes: existing `IonVisualState` and membrane scene.
+- Produces: one-second stimulus window, four large crossing ions, visible path, and live compartment counts.
+
+- [ ] **Step 1: Write failing visibility tests**
+
+验证 `time=1.8` 时刺激仍激活；源码含 `membrane-ion-counts`；手机跨膜粒子最小 30 px；跨膜队列至少四个粒子。
+
+- [ ] **Step 2: Run tests and confirm failure**
+
+Run: `npm test`
+
+Expected: FAIL because the old stimulus ends at 1.5, no count board exists, and mobile crossing particles are 23 px.
+
+- [ ] **Step 3: Implement visible behavior**
+
+扩展刺激窗口到 `[1, 2)`；增加数量牌；将跨膜队列扩为四个；把手机跨膜粒子提高到 30 px，并用无箭头发光轨迹强调完整路径。
+
+- [ ] **Step 4: Verify four visual states**
+
+在 390×844 和 1440×900 视口检查静息、刺激、Na⁺ 内流和 K⁺ 外流，确认数量牌与实体粒子数量一致、无溢出遮挡。
+
+- [ ] **Step 5: Run full verification and deploy**
+
+Run: `npm test && npm run lint && npm run build`
+
+Expected: all tests pass, build succeeds, GitHub Pages workflow succeeds, and public assets return HTTP 200.
