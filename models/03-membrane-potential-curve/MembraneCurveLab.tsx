@@ -113,8 +113,8 @@ export function MembraneCurveLab() {
     >
       <header className="membrane-header">
         <div className="membrane-brand">
-          <p className="membrane-eyebrow">神经纤维</p>
-          <h1 id="membrane-title">膜电位变化</h1>
+          <p className="membrane-eyebrow">选择性必修1 · 神经冲动的传导</p>
+          <h1 id="membrane-title">膜电位变化曲线</h1>
         </div>
         <div className="membrane-live-state" aria-live="polite">
           <span className={playing ? "is-running" : ""} aria-hidden="true" />
@@ -137,7 +137,12 @@ export function MembraneCurveLab() {
           compare={compare}
           onTimeChange={changeTime}
         />
-        <MembraneView snapshot={snapshot} playing={playing} />
+        <MembraneView
+          snapshot={snapshot}
+          playing={playing}
+          time={time}
+          intensity={intensity}
+        />
       </section>
 
       <StageExplanation stage={snapshot.stage} onSelectTime={selectStageTime} />

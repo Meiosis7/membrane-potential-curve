@@ -599,126 +599,160 @@
   background: #fff5e6;
 }
 
-.membrane-flow-track {
+.membrane-ion-stream {
+  --stream-color: var(--mem-sodium);
   position: absolute;
-  z-index: 8;
-  top: 13%;
-  bottom: 13%;
-  left: 9px;
-  width: 64px;
+  z-index: 12;
+  top: 5%;
+  bottom: 5%;
+  left: 41px;
+  width: 52px;
   pointer-events: none;
 }
 
-.membrane-flow-track::before {
-  position: absolute;
-  top: 31px;
-  bottom: 8px;
-  left: 50%;
-  width: 4px;
-  border-radius: 999px;
-  content: "";
-  transform: translateX(-50%);
-  background: var(--flow-color);
-  opacity: .42;
+.membrane-ion-stream.potassium {
+  --stream-color: var(--mem-potassium);
+  right: 41px;
+  left: auto;
 }
 
-.membrane-flow-track strong {
+.membrane-ion-stream strong {
   position: absolute;
-  z-index: 3;
+  z-index: 4;
   top: 0;
   left: 50%;
   min-width: 72px;
-  padding: 4px 7px;
+  padding: 4px 8px;
   border: 1px solid currentColor;
   border-radius: 999px;
   transform: translateX(-50%);
+  color: var(--stream-color);
   background: rgba(255, 255, 255, .94);
-  font-size: 11px;
+  box-shadow: 0 4px 12px rgba(24, 49, 59, .08);
+  font-size: 10px;
   line-height: 1;
   text-align: center;
   white-space: nowrap;
 }
 
-.membrane-flow-arrow {
-  position: absolute;
-  z-index: 4;
-  top: 50%;
-  left: calc(50% + 18px);
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 48px;
-  border-radius: 14px;
-  transform: translate(-50%, -50%);
-  color: #fff;
-  background: var(--flow-color);
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--flow-color) 28%, transparent);
-  font-size: 38px;
-  font-weight: 900;
-  line-height: 1;
+.membrane-ion-stream.potassium strong {
+  top: auto;
+  bottom: 0;
 }
 
-.membrane-flow-dot {
-  position: absolute;
-  z-index: 2;
+.membrane-crossing-ion {
+  z-index: 13;
   left: 50%;
-  width: 14px;
-  height: 14px;
-  border: 3px solid #fff;
+  width: 30px;
+  height: 30px;
+  border: 2px solid rgba(255, 255, 255, .92);
+  box-shadow: 0 4px 13px color-mix(in srgb, var(--stream-color) 34%, transparent);
+  animation: sodium-cross-membrane 1.26s linear infinite;
+}
+
+.membrane-crossing-ion > span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.membrane-ion-stream.potassium .membrane-crossing-ion {
+  animation-name: potassium-cross-membrane;
+}
+
+.membrane-scene.is-paused .membrane-crossing-ion,
+.membrane-scene.is-paused .membrane-stimulus.is-active i,
+.membrane-scene.is-paused .membrane-stimulus.is-active b {
+  animation-play-state: paused;
+}
+
+@keyframes sodium-cross-membrane {
+  0% { top: 10%; opacity: 0; transform: translate(-50%, -50%) scale(.82); }
+  12% { opacity: 1; }
+  48% { top: 45%; transform: translate(-50%, -50%) scale(1.08); }
+  62% { top: 58%; transform: translate(-50%, -50%) scale(1.08); }
+  88% { opacity: 1; }
+  100% { top: 90%; opacity: 0; transform: translate(-50%, -50%) scale(.82); }
+}
+
+@keyframes potassium-cross-membrane {
+  0% { top: 90%; opacity: 0; transform: translate(-50%, -50%) scale(.82); }
+  12% { opacity: 1; }
+  48% { top: 58%; transform: translate(-50%, -50%) scale(1.08); }
+  62% { top: 45%; transform: translate(-50%, -50%) scale(1.08); }
+  88% { opacity: 1; }
+  100% { top: 10%; opacity: 0; transform: translate(-50%, -50%) scale(.82); }
+}
+
+.membrane-stimulus {
+  position: absolute;
+  z-index: 15;
+  top: 0;
+  left: 50%;
+  width: 54px;
+  height: 46%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.membrane-stimulus.is-active {
+  opacity: 1;
+}
+
+.membrane-stimulus > span {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  padding: 3px 8px;
+  border: 1px solid var(--mem-curve);
+  border-radius: 999px;
+  transform: translateX(-50%);
+  color: #a63f31;
+  background: rgba(255, 247, 244, .94);
+  font-size: 9px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.membrane-stimulus > i {
+  position: absolute;
+  top: 31px;
+  bottom: 1px;
+  left: 50%;
+  width: 3px;
+  border-radius: 999px;
+  transform: translateX(-50%);
+  background: linear-gradient(var(--mem-curve), #f8b44b);
+  box-shadow: 0 0 12px rgba(239, 106, 87, .6);
+  animation: stimulus-electrode 520ms ease-in-out infinite alternate;
+}
+
+.membrane-stimulus > b {
+  position: absolute;
+  right: 5px;
+  bottom: -9px;
+  width: 22px;
+  height: 22px;
+  border: 3px solid var(--mem-curve);
   border-radius: 50%;
-  transform: translate(-50%, -50%);
-  background-color: var(--flow-color);
-  background-image: url("/synapse-cinematic/transmitters-layer.png");
-  background-repeat: no-repeat;
-  background-position: -6px -6px;
-  background-size: 150px auto;
-  box-shadow: 0 3px 9px color-mix(in srgb, var(--flow-color) 32%, transparent);
+  animation: stimulus-ring 720ms ease-out infinite;
 }
 
-.membrane-flow-track.sodium .membrane-flow-dot {
-  filter: hue-rotate(145deg) saturate(1.45);
+.membrane-stimulus[data-level="weak"] { opacity: .58; }
+.membrane-stimulus[data-level="strong"] > b { animation-duration: 430ms; }
+
+@keyframes stimulus-electrode {
+  from { filter: brightness(.9); transform: translateX(-50%) scaleY(.94); }
+  to { filter: brightness(1.35); transform: translateX(-50%) scaleY(1.03); }
 }
 
-.membrane-flow-track.potassium .membrane-flow-dot {
-  filter: saturate(1.1);
-}
-
-.membrane-flow-dot:nth-of-type(1) { top: 27%; }
-.membrane-flow-dot:nth-of-type(2) { top: 54%; }
-.membrane-flow-dot:nth-of-type(3) { top: 81%; }
-
-.membrane-flow-track.sodium {
-  --flow-color: var(--mem-sodium);
-  color: var(--mem-sodium);
-}
-
-.membrane-flow-track.potassium {
-  --flow-color: var(--mem-potassium);
-  right: 9px;
-  left: auto;
-  color: var(--mem-potassium);
-}
-
-.membrane-flow-track.sodium .membrane-flow-dot {
-  animation: sodium-track-in 1.15s linear infinite;
-}
-
-.membrane-flow-track.potassium .membrane-flow-dot {
-  animation: potassium-track-out 1.15s linear infinite;
-}
-
-@keyframes sodium-track-in {
-  0% { top: 18%; opacity: 0; }
-  14% { opacity: 1; }
-  86% { opacity: 1; }
-  100% { top: 91%; opacity: 0; }
-}
-
-@keyframes potassium-track-out {
-  0% { top: 91%; opacity: 0; }
-  14% { opacity: 1; }
-  86% { opacity: 1; }
-  100% { top: 18%; opacity: 0; }
+@keyframes stimulus-ring {
+  from { opacity: .95; transform: scale(.35); }
+  to { opacity: 0; transform: scale(1.65); }
 }
 
 .membrane-polarity-bar {
@@ -1334,34 +1368,49 @@
     font-size: 7px;
   }
 
-  .membrane-flow-track {
-    top: 8%;
-    bottom: 8%;
-    left: 4px;
-    width: 46px;
+  .membrane-ion-stream {
+    top: 3%;
+    bottom: 3%;
+    left: 28px;
+    width: 42px;
   }
 
-  .membrane-flow-track.potassium {
-    right: 4px;
+  .membrane-ion-stream.potassium {
+    right: 28px;
   }
 
-  .membrane-flow-track strong {
+  .membrane-ion-stream strong {
     min-width: 54px;
     padding: 3px 5px;
     font-size: 8px;
   }
 
-  .membrane-flow-arrow {
-    left: calc(50% + 12px);
-    width: 28px;
-    height: 32px;
-    border-radius: 9px;
-    font-size: 25px;
+  .membrane-crossing-ion {
+    width: 23px;
+    height: 23px;
+    font-size: 6px;
   }
 
-  .membrane-flow-dot {
-    width: 10px;
-    height: 10px;
+  .membrane-stimulus {
+    width: 44px;
+  }
+
+  .membrane-stimulus > span {
+    top: 3px;
+    padding: 2px 6px;
+    font-size: 7px;
+  }
+
+  .membrane-stimulus > i {
+    top: 23px;
+    width: 2px;
+  }
+
+  .membrane-stimulus > b {
+    right: 4px;
+    bottom: -7px;
+    width: 17px;
+    height: 17px;
     border-width: 2px;
   }
 
