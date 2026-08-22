@@ -11,17 +11,18 @@ export interface StageDetail {
 
 export interface ActionPotentialStep {
   stage: Exclude<CurveStage, "local">;
-  time: number;
+  startTime: number;
+  endTime: number;
 }
 
 export const ACTION_POTENTIAL_STEPS: ReadonlyArray<ActionPotentialStep> = [
-  { stage: "resting", time: 0.4 },
-  { stage: "threshold", time: 1.5 },
-  { stage: "depolarization", time: 2.5 },
-  { stage: "peak", time: 3.3 },
-  { stage: "repolarization", time: 4.35 },
-  { stage: "hyperpolarization", time: 5.15 },
-  { stage: "recovery", time: 5.65 },
+  { stage: "resting", startTime: 0, endTime: 1 },
+  { stage: "threshold", startTime: 1, endTime: 2 },
+  { stage: "depolarization", startTime: 2, endTime: 3 },
+  { stage: "peak", startTime: 3, endTime: 4 },
+  { stage: "repolarization", startTime: 4, endTime: 4.8 },
+  { stage: "hyperpolarization", startTime: 4.8, endTime: 5.3 },
+  { stage: "recovery", startTime: 5.3, endTime: 6 },
 ];
 
 export const STAGE_DETAILS: Record<CurveStage, StageDetail> = {

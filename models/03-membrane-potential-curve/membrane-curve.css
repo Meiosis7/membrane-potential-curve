@@ -51,6 +51,7 @@
 }
 
 .membrane-stage-nav button {
+  position: relative;
   display: grid;
   align-content: center;
   justify-items: start;
@@ -63,6 +64,16 @@
   color: var(--mem-muted);
   background: transparent;
   text-align: left;
+}
+
+.membrane-stage-nav button i {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: var(--mem-sodium);
+  font-size: 8px;
+  font-style: normal;
+  opacity: .7;
 }
 
 .membrane-stage-nav button:last-child {
@@ -90,6 +101,11 @@
 
 .membrane-stage-nav button[aria-pressed="true"] b {
   color: rgba(255, 255, 255, .72);
+}
+
+.membrane-stage-nav button[aria-pressed="true"] i {
+  color: #fff;
+  opacity: 1;
 }
 
 .membrane-stage-detail {
@@ -1264,6 +1280,10 @@
   }
 
   .membrane-stage-nav button b {
+    display: none;
+  }
+
+  .membrane-stage-nav button i {
     display: none;
   }
 

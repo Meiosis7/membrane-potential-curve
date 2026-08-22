@@ -5,10 +5,10 @@ import type { CurveStage } from "./types";
 
 export interface StageExplanationProps {
   stage: CurveStage;
-  onSelectTime: (time: number) => void;
+  onPlayRange: (startTime: number, endTime: number) => void;
 }
 
-export function StageExplanation({ stage, onSelectTime }: StageExplanationProps) {
+export function StageExplanation({ stage, onPlayRange }: StageExplanationProps) {
   const detail = STAGE_DETAILS[stage];
   const activeStep = ACTION_POTENTIAL_STEPS.findIndex((step) => step.stage === stage);
 
@@ -22,12 +22,13 @@ export function StageExplanation({ stage, onSelectTime }: StageExplanationProps)
             <button
               type="button"
               key={step.stage}
-              aria-label={`步骤 ${index + 1} ${stepDetail.title}`}
+              aria-label={`播放步骤 ${index + 1} ${stepDetail.title}`}
               aria-pressed={active}
-              onClick={() => onSelectTime(step.time)}
+              onClick={() => onPlayRange(step.startTime, step.endTime)}
             >
               <b>{String(index + 1).padStart(2, "0")}</b>
               <span>{stepDetail.shortTitle}</span>
+              <i aria-hidden="true">▶</i>
             </button>
           );
         })}

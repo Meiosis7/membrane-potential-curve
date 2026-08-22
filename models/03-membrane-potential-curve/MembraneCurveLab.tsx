@@ -4,7 +4,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { CurveCanvas } from "./CurveCanvas";
 import { MembraneView } from "./MembraneView";
 import { StageExplanation } from "./StageExplanation";
+import { advancePlayback } from "./playback";
 import { getCurveSnapshot } from "./simulation";
+import type { PlaybackSpeed } from "./playback";
 import type { CurveIntensity, CurveStage } from "./types";
 
 const DURATION = 6;
@@ -41,9 +43,10 @@ export function MembraneCurveLab() {
   const [time, setTime] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
-  const [speed, setSpeed] = useState<0.5 | 1 | 2>(1);
+  const [speed, setSpeed] = useState<PlaybackSpeed>(1);
   const [compare, setCompare] = useState(false);
   const lastFrame = useRef<number | null>(null);
+  const playUntil = useRef(DURATION);
   const snapshot = useMemo(() => getCurveSnapshot(time, intensity), [intensity, time]);
 
   useEffect(() => {
@@ -53,8 +56,8 @@ export function MembraneCurveLab() {
       const previous = lastFrame.current ?? now;
       lastFrame.current = now;
       setTime((current) => {
-        const next = clamp(current + ((now - previous) / 1000) * speed);
-        if (next >= DURATION) setPlaying(false);
+        const next = advancePlayback(current, now - previous, speed, playUntil.current);
+        if (next >= playUntil.current) setPlaying(false);
         return next;
       });
       frame = requestAnimationFrame(tick);
@@ -67,12 +70,16 @@ export function MembraneCurveLab() {
   }, [playing, speed]);
 
   const changeTime = (nextTime: number) => {
+    playUntil.current = DURATION;
+    lastFrame.current = null;
     setPlaying(false);
     setHasStarted(true);
     setTime(clamp(nextTime));
   };
 
   const selectIntensity = (nextIntensity: CurveIntensity) => {
+    playUntil.current = DURATION;
+    lastFrame.current = null;
     setIntensity(nextIntensity);
     setTime(0);
     setPlaying(false);
@@ -84,12 +91,16 @@ export function MembraneCurveLab() {
       setPlaying(false);
       return;
     }
+    playUntil.current = DURATION;
+    lastFrame.current = null;
     if (!hasStarted || time >= DURATION) setTime(0);
     setHasStarted(true);
     setPlaying(true);
   };
 
   const reset = () => {
+    playUntil.current = DURATION;
+    lastFrame.current = null;
     setPlaying(false);
     setHasStarted(false);
     setTime(0);
@@ -98,9 +109,13 @@ export function MembraneCurveLab() {
     setCompare(false);
   };
 
-  const selectStageTime = (nextTime: number) => {
+  const playStageRange = (startTime: number, endTime: number) => {
     if (intensity === "weak") setIntensity("threshold");
-    changeTime(nextTime);
+    playUntil.current = clamp(endTime);
+    lastFrame.current = null;
+    setTime(clamp(startTime));
+    setHasStarted(true);
+    setPlaying(true);
   };
 
   const playLabel = playing ? "暂停" : hasStarted ? "继续" : "开始";
@@ -145,7 +160,7 @@ export function MembraneCurveLab() {
         />
       </section>
 
-      <StageExplanation stage={snapshot.stage} onSelectTime={selectStageTime} />
+      <StageExplanation stage={snapshot.stage} onPlayRange={playStageRange} />
 
       <section className="membrane-controls" aria-label="实验控制台">
         <fieldset className="membrane-intensity-control">

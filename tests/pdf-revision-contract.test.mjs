@@ -74,3 +74,14 @@ test("depolarization copy and compact compartment sizing follow the PDF notes", 
     /grid-template-rows:\s*minmax\(0,\s*\.82fr\)\s+62px\s+minmax\(0,\s*\.82fr\)/,
   );
 });
+
+test("stage navigation starts bounded animation instead of selecting a static time", async () => {
+  const lab = await source("MembraneCurveLab.tsx");
+  const stages = await source("StageExplanation.tsx");
+
+  assert.match(lab, /playUntil/);
+  assert.match(lab, /advancePlayback/);
+  assert.match(stages, /onPlayRange/);
+  assert.match(stages, /播放步骤/);
+  assert.doesNotMatch(stages, /onSelectTime/);
+});
