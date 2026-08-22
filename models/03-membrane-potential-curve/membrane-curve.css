@@ -10,6 +10,7 @@
   --mem-potassium: #d58a22;
   --mem-curve: #ef6a57;
   --mem-violet: #7c6bc4;
+  --membrane-compartment-label-size: 9px;
 }
 
 .membrane-shell {
@@ -170,7 +171,7 @@
 
 .membrane-header h1 {
   margin: 0;
-  font-size: clamp(25px, 2.3vw, 34px);
+  font-size: clamp(29px, 2.6vw, 40px);
   line-height: 1;
   letter-spacing: -.04em;
 }
@@ -373,7 +374,7 @@
 .membrane-scene {
   position: relative;
   display: grid;
-  grid-template-rows: minmax(0, 1fr) 70px minmax(0, 1fr);
+  grid-template-rows: minmax(0, .82fr) 62px minmax(0, .82fr);
   min-height: 0;
   margin: 10px 0;
   overflow: hidden;
@@ -396,13 +397,13 @@
   align-items: center;
   gap: 7px;
   color: var(--mem-muted);
-  font-size: 11px;
+  font-size: var(--membrane-compartment-label-size);
   font-weight: 750;
 }
 
 .membrane-compartment-label b {
   color: var(--mem-text);
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .membrane-intracellular .membrane-compartment-label {
@@ -1099,6 +1100,10 @@
 }
 
 @media (max-width: 800px) {
+  :root {
+    --membrane-compartment-label-size: 7px;
+  }
+
   .membrane-shell {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto auto;
@@ -1123,7 +1128,7 @@
   }
 
   .membrane-header h1 {
-    font-size: 20px;
+    font-size: 23px;
   }
 
   .membrane-live-state {
@@ -1312,7 +1317,7 @@
   }
 
   .membrane-scene {
-    grid-template-rows: minmax(0, 1fr) 50px minmax(0, 1fr);
+    grid-template-rows: minmax(0, .82fr) 46px minmax(0, .82fr);
     height: 100%;
     min-height: 0;
     margin: 4px 0;
@@ -1323,11 +1328,11 @@
     top: 4px;
     left: 5px;
     gap: 4px;
-    font-size: 8px;
+    font-size: var(--membrane-compartment-label-size);
   }
 
   .membrane-compartment-label b {
-    font-size: 13px;
+    font-size: 11px;
   }
 
   .membrane-intracellular .membrane-compartment-label {
@@ -1504,7 +1509,7 @@
   }
 
   .membrane-header h1 {
-    font-size: 19px;
+    font-size: 21px;
   }
 
   .membrane-curve-card,

@@ -31,3 +31,15 @@ test("large directional arrow is removed from the membrane scene", async () => {
   assert.doesNotMatch(view, /membrane-flow-arrow/);
   assert.doesNotMatch(css, /\.membrane-flow-arrow/);
 });
+
+test("depolarization copy and compact compartment sizing follow the PDF notes", async () => {
+  const stages = await source("stage-content.ts");
+  const css = await source("membrane-curve.css");
+
+  assert.match(stages, /Na⁺ 顺电化学浓度梯度大量内流/);
+  assert.match(css, /--membrane-compartment-label-size:\s*9px/);
+  assert.match(
+    css,
+    /grid-template-rows:\s*minmax\(0,\s*\.82fr\)\s+62px\s+minmax\(0,\s*\.82fr\)/,
+  );
+});

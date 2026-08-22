@@ -54,7 +54,7 @@ export const STAGE_DETAILS: Record<CurveStage, StageDetail> = {
     shortTitle: "去极化",
     summary: "膜内电位快速升高，并由负值转为正值。",
     voltage: "由约 −55 mV 快速升至约 +30 mV",
-    transport: "Na⁺ 通道开放，Na⁺ 顺电化学梯度大量内流",
+    transport: "Na⁺ 通道开放，Na⁺ 顺电化学浓度梯度大量内流",
     result: "膜内外电性发生反转，动作电位到达峰值",
   },
   peak: {
