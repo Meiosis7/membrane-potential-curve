@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { CurveCanvas } from "./CurveCanvas";
 import { MembraneView } from "./MembraneView";
 import { StageExplanation } from "./StageExplanation";
-import { advancePlayback } from "./playback";
+import { advancePlayback, getStagePlaybackEnd } from "./playback";
 import { getCurveSnapshot } from "./simulation";
 import type { PlaybackSpeed } from "./playback";
 import type { CurveIntensity, CurveStage } from "./types";
@@ -111,7 +111,7 @@ export function MembraneCurveLab() {
 
   const playStageRange = (startTime: number, endTime: number) => {
     if (intensity === "weak") setIntensity("threshold");
-    playUntil.current = clamp(endTime);
+    playUntil.current = clamp(getStagePlaybackEnd(endTime));
     lastFrame.current = null;
     setTime(clamp(startTime));
     setHasStarted(true);

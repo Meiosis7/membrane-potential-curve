@@ -1284,7 +1284,11 @@
   }
 
   .membrane-stage-nav button i {
-    display: none;
+    top: 50%;
+    right: 2px;
+    display: block;
+    font-size: 5px;
+    transform: translateY(-50%);
   }
 
   .membrane-stage-nav button span {

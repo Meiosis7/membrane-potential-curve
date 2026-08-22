@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   advancePlayback,
+  getStagePlaybackEnd,
   SECONDS_PER_TIME_UNIT,
 } from "../models/03-membrane-potential-curve/playback.ts";
 import { ACTION_POTENTIAL_STEPS } from "../models/03-membrane-potential-curve/stage-content.ts";
@@ -16,6 +17,13 @@ test("1x playback uses a readable teaching pace", () => {
 test("playback stops exactly at the selected stage boundary", () => {
   assert.equal(advancePlayback(2.9, 1_000, 1, 3), 3);
   assert.equal(advancePlayback(3, 1_000, 2, 3), 3);
+});
+
+test("stage endpoint stays inside the selected stage while displaying the boundary", () => {
+  assert.ok(getStagePlaybackEnd(3) < 3);
+  assert.equal(getStagePlaybackEnd(3).toFixed(1), "3.0");
+  assert.ok(getStagePlaybackEnd(6) < 6);
+  assert.equal(getStagePlaybackEnd(6).toFixed(1), "6.0");
 });
 
 test("stage ranges are continuous and cover the full action potential", () => {

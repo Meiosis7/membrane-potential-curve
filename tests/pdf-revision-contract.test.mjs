@@ -81,6 +81,7 @@ test("stage navigation starts bounded animation instead of selecting a static ti
 
   assert.match(lab, /playUntil/);
   assert.match(lab, /advancePlayback/);
+  assert.match(lab, /getStagePlaybackEnd/);
   assert.match(stages, /onPlayRange/);
   assert.match(stages, /播放步骤/);
   assert.doesNotMatch(stages, /onSelectTime/);
