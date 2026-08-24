@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { getCurveSnapshot } from "./simulation";
 import type { CurveIntensity, CurveSnapshot } from "./types";
-import type { VisualVariant } from "./visual-theme";
+import { getCurveVisualTheme, type VisualVariant } from "./visual-theme";
 import { formatMembranePotential } from "./voltage-format";
 
 const DURATION = 6;
@@ -18,12 +18,6 @@ export interface CurveCanvasProps {
   visualVariant?: VisualVariant;
   onTimeChange: (nextTime: number) => void;
 }
-
-const CURVE_STYLE: Record<CurveIntensity, { color: string; dash: number[]; label: string }> = {
-  weak: { color: "#7c6bc4", dash: [8, 6], label: "弱刺激" },
-  threshold: { color: "#ef6a57", dash: [], label: "阈刺激" },
-  strong: { color: "#168f91", dash: [3, 5], label: "强刺激" },
-};
 
 export function getVisibleCurveTimes(time: number): number[] {
   const visibleTime = Math.min(DURATION, Math.max(0, time));
@@ -77,6 +71,7 @@ export function CurveCanvas({
 }: CurveCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dragging = useRef(false);
+  const theme = getCurveVisualTheme(visualVariant);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -100,35 +95,35 @@ export function CurveCanvas({
 
       const gradient = context.createLinearGradient?.(0, PADDING.top, 0, height - PADDING.bottom);
       if (gradient) {
-        gradient.addColorStop(0, "rgba(234, 242, 238, .74)");
-        gradient.addColorStop(1, "rgba(250, 251, 248, .34)");
+        gradient.addColorStop(0, theme.surfaceTop);
+        gradient.addColorStop(1, theme.surfaceBottom);
         context.fillStyle = gradient;
       } else {
-        context.fillStyle = "#f8faf7";
+        context.fillStyle = theme.surfaceFallback;
       }
       context.fillRect(PADDING.left, PADDING.top, plotWidth, plotHeight);
 
       context.font = '12px Inter, "PingFang SC", sans-serif';
       [-70, -55, 0, 30].forEach((mv) => {
         context.beginPath();
-        context.strokeStyle = mv === -55 ? "rgba(213, 138, 34, .58)" : "rgba(95, 119, 114, .16)";
+        context.strokeStyle = mv === -55 ? theme.threshold : theme.grid;
         context.lineWidth = 1;
         context.setLineDash?.(mv === -55 ? [6, 5] : []);
         context.moveTo(PADDING.left, y(mv));
         context.lineTo(width - PADDING.right, y(mv));
         context.stroke();
         context.setLineDash?.([]);
-        context.fillStyle = mv === -55 ? "#b16f15" : "#71847e";
+        context.fillStyle = mv === -55 ? theme.thresholdLabel : theme.gridLabel;
         context.fillText(`${mv > 0 ? "+" : ""}${mv}`, 20, y(mv) + 4);
       });
 
       const [start, end] = stageInterval(time, intensity, snapshot.stage);
-      context.fillStyle = "rgba(22, 143, 145, .07)";
+      context.fillStyle = theme.stageBand;
       context.fillRect(x(start), PADDING.top, Math.max(2, x(end) - x(start)), plotHeight);
 
       const intensities: CurveIntensity[] = compare ? ["weak", "threshold", "strong"] : [intensity];
       intensities.forEach((curveIntensity) => {
-        const style = CURVE_STYLE[curveIntensity];
+        const style = theme.intensities[curveIntensity];
         context.beginPath();
         getVisibleCurveTimes(time).forEach((pointTime, index) => {
           const point = getCurveSnapshot(pointTime, curveIntensity);
@@ -137,27 +132,35 @@ export function CurveCanvas({
         });
         context.strokeStyle = style.color;
         context.lineWidth = curveIntensity === intensity ? 3.5 : 2;
-        context.setLineDash?.(style.dash);
+        context.setLineDash?.([...style.dash]);
+        if (visualVariant === "beautified" && curveIntensity === intensity) {
+          context.shadowColor = style.color;
+          context.shadowBlur = 6;
+        }
         context.stroke();
+        if (visualVariant === "beautified" && curveIntensity === intensity) {
+          context.shadowBlur = 0;
+          context.shadowColor = theme.cursor;
+        }
         context.setLineDash?.([]);
       });
 
       context.beginPath();
-      context.strokeStyle = "rgba(24, 49, 59, .62)";
+      context.strokeStyle = theme.cursor;
       context.lineWidth = 1;
       context.moveTo(x(time), PADDING.top);
       context.lineTo(x(time), height - PADDING.bottom);
       context.stroke();
       context.beginPath();
-      context.fillStyle = CURVE_STYLE[intensity].color;
+      context.fillStyle = theme.intensities[intensity].color;
       context.arc?.(x(time), y(snapshot.mv), 7, 0, Math.PI * 2);
       context.fill?.();
 
-      context.fillStyle = "#27434c";
+      context.fillStyle = theme.label;
       context.font = '700 12px Inter, "PingFang SC", sans-serif';
       context.fillText(stageLabel(snapshot.stage), Math.min(x(time) + 10, width - 88), PADDING.top + 18);
       context.font = '11px Inter, "PingFang SC", sans-serif';
-      context.fillStyle = "#6f817b";
+      context.fillStyle = theme.axisLabel;
       for (let tick = 0; tick <= DURATION; tick += 1) {
         context.fillText(String(tick), x(tick) - 3, height - 17);
       }
@@ -170,7 +173,7 @@ export function CurveCanvas({
     const observer = new ResizeObserver(draw);
     observer.observe(canvas);
     return () => observer.disconnect();
-  }, [compare, intensity, snapshot, time, visualVariant]);
+  }, [compare, intensity, snapshot, theme, time, visualVariant]);
 
   const updateFromPointer = (clientX: number) => {
     const canvas = canvasRef.current;
@@ -231,11 +234,11 @@ export function CurveCanvas({
           <span key={curveIntensity}>
             <i
               style={{
-                borderTopColor: CURVE_STYLE[curveIntensity].color,
-                borderTopStyle: CURVE_STYLE[curveIntensity].dash.length ? "dashed" : "solid",
+                borderTopColor: theme.intensities[curveIntensity].color,
+                borderTopStyle: theme.intensities[curveIntensity].dash.length ? "dashed" : "solid",
               }}
             />
-            {CURVE_STYLE[curveIntensity].label}
+            {theme.intensities[curveIntensity].label}
           </span>
         ))}
         {compare && (

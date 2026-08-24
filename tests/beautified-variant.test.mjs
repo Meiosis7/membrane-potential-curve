@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { getCurveVisualTheme } from "../models/03-membrane-potential-curve/visual-theme.ts";
 
 const repoRoot = new URL("../", import.meta.url);
 const source = (path) => readFile(new URL(path, repoRoot), "utf8");
@@ -21,4 +22,13 @@ test("the shared lab defaults to the original root class", async () => {
   const lab = await source("models/03-membrane-potential-curve/MembraneCurveLab.tsx");
   assert.match(lab, /visualVariant = "original"/);
   assert.match(lab, /visualVariant === "beautified" \? "membrane-shell is-beautified" : "membrane-shell"/);
+});
+
+test("the original canvas palette is preserved and beautified palette is distinct", () => {
+  const original = getCurveVisualTheme("original");
+  const beautified = getCurveVisualTheme("beautified");
+  assert.equal(original.intensities.threshold.color, "#ef6a57");
+  assert.equal(original.intensities.strong.color, "#168f91");
+  assert.notEqual(beautified.surfaceTop, original.surfaceTop);
+  assert.equal(beautified.accents.sodium, "#16a6ad");
 });
