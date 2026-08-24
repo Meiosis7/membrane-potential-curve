@@ -26,6 +26,15 @@ test("membrane scene contains a stimulus pulse and labelled crossing ions", asyn
   assert.match(view, />K⁺</);
 });
 
+test("zero-voltage presentation shows neutral signs on both membrane sides", async () => {
+  const view = await source("MembraneView.tsx");
+
+  assert.match(view, /getDisplayedPolarity/);
+  assert.match(view, /displayedPolarity === "neutral" \? "0"/);
+  assert.match(view, /膜外 <b>\{outsideSign\}<\/b>/);
+  assert.match(view, /膜内 <b>\{insideSign\}<\/b>/);
+});
+
 test("stimulus pulse is large enough to remain visually obvious", async () => {
   const css = await source("membrane-curve.css");
 

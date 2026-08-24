@@ -2,6 +2,7 @@
 
 import { getIonVisualState } from "./ion-visual-state";
 import type { CurveIntensity, CurveSnapshot } from "./types";
+import { getDisplayedPolarity } from "./voltage-format";
 
 export interface MembraneViewProps {
   snapshot: CurveSnapshot;
@@ -104,7 +105,9 @@ function IonStream({ ion }: { ion: "sodium" | "potassium" }) {
 }
 
 export function MembraneView({ snapshot, playing, time, intensity }: MembraneViewProps) {
-  const insidePositive = snapshot.insidePolarity === "positive";
+  const displayedPolarity = getDisplayedPolarity(snapshot.mv);
+  const outsideSign = displayedPolarity === "neutral" ? "0" : displayedPolarity === "positive" ? "−" : "+";
+  const insideSign = displayedPolarity === "neutral" ? "0" : displayedPolarity === "positive" ? "+" : "−";
   const visual = getIonVisualState(time, intensity, snapshot);
 
   return (
@@ -132,7 +135,7 @@ export function MembraneView({ snapshot, playing, time, intensity }: MembraneVie
         </div>
 
         <div className="membrane-compartment membrane-extracellular">
-          <span className="membrane-compartment-label">膜外 <b>{insidePositive ? "−" : "+"}</b></span>
+          <span className="membrane-compartment-label">膜外 <b>{outsideSign}</b></span>
           {renderParticles(PARTICLE_POSITIONS.sodiumOutside, visual.sodium.outside, "sodium", "outside")}
           {renderParticles(PARTICLE_POSITIONS.potassiumOutside, visual.potassium.outside, "potassium", "outside")}
         </div>
@@ -154,7 +157,7 @@ export function MembraneView({ snapshot, playing, time, intensity }: MembraneVie
         </div>
 
         <div className="membrane-compartment membrane-intracellular">
-          <span className="membrane-compartment-label">膜内 <b>{insidePositive ? "+" : "−"}</b></span>
+          <span className="membrane-compartment-label">膜内 <b>{insideSign}</b></span>
           {renderParticles(PARTICLE_POSITIONS.potassiumInside, visual.potassium.inside, "potassium", "inside")}
           {renderParticles(PARTICLE_POSITIONS.sodiumInside, visual.sodium.inside, "sodium", "inside")}
         </div>
