@@ -202,3 +202,549 @@
     0 0 0 1px rgba(255, 255, 255, .9),
     0 0 0 6px rgba(22, 166, 173, .1);
 }
+
+/* Membrane chamber */
+.membrane-shell.is-beautified .membrane-scene {
+  border-color: rgba(52, 94, 89, .2);
+  background: linear-gradient(
+    #e9f7f7 0 42%,
+    #f2e5c8 42% 58%,
+    #fff4e8 58%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .9),
+    inset 0 0 34px rgba(43, 99, 93, .055),
+    0 10px 26px rgba(52, 77, 68, .07);
+}
+
+.membrane-shell.is-beautified .membrane-extracellular {
+  background:
+    radial-gradient(circle at 18% 20%, rgba(255, 255, 255, .84), transparent 31%),
+    linear-gradient(180deg, rgba(217, 243, 244, .88), rgba(235, 247, 246, .76));
+}
+
+.membrane-shell.is-beautified .membrane-intracellular {
+  background:
+    radial-gradient(circle at 82% 76%, rgba(255, 255, 255, .72), transparent 30%),
+    linear-gradient(180deg, rgba(255, 246, 233, .82), rgba(250, 230, 206, .72));
+}
+
+.membrane-shell.is-beautified .membrane-compartment-label {
+  color: var(--beauty-muted-ink);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .86);
+}
+
+.membrane-shell.is-beautified .membrane-compartment-label b {
+  color: var(--beauty-ink);
+}
+
+.membrane-shell.is-beautified .membrane-bilayer {
+  border-block-color: rgba(160, 120, 48, .38);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, .28), transparent 18% 82%, rgba(255, 255, 255, .28)),
+    linear-gradient(180deg, #ead29e 0 17%, #f7e8c8 17% 43%, #d6b977 43% 57%, #f7e8c8 57% 83%, #ead29e 83%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .76),
+    inset 0 -1px 0 rgba(132, 93, 31, .12),
+    0 4px 12px rgba(112, 86, 37, .09);
+}
+
+.membrane-shell.is-beautified .membrane-lipid-field {
+  gap: 5px;
+}
+
+.membrane-shell.is-beautified .membrane-lipid-field i {
+  border-block-color: #d2ae62;
+  border-radius: 8px;
+  opacity: .92;
+  filter: drop-shadow(0 1px 1px rgba(99, 70, 28, .14));
+}
+
+.membrane-shell.is-beautified .membrane-lipid-field i::after {
+  inset-inline: 43%;
+  background: linear-gradient(180deg, #c29b51, #e1c27f 47%, #c29b51);
+  box-shadow: 1px 0 0 rgba(255, 255, 255, .34);
+}
+
+/* Ions and transport */
+.membrane-shell.is-beautified .membrane-particle {
+  border: 1px solid rgba(255, 255, 255, .88);
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(11, 58, 62, .62);
+  box-shadow:
+    inset 0 -5px 9px rgba(13, 71, 75, .14),
+    inset 0 2px 3px rgba(255, 255, 255, .56),
+    0 5px 11px rgba(41, 77, 72, .16);
+}
+
+.membrane-shell.is-beautified .membrane-particle.sodium {
+  background: linear-gradient(145deg, rgba(76, 203, 208, .84), rgba(10, 133, 141, .94));
+}
+
+.membrane-shell.is-beautified .membrane-particle.potassium {
+  background: linear-gradient(145deg, rgba(255, 193, 99, .9), rgba(214, 126, 24, .95));
+}
+
+.membrane-shell.is-beautified .membrane-particle::before {
+  opacity: .3;
+  filter: none;
+}
+
+.membrane-shell.is-beautified .membrane-particle::after {
+  position: absolute;
+  z-index: 2;
+  top: 4px;
+  left: 6px;
+  width: 9px;
+  height: 5px;
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+  background: rgba(255, 255, 255, .78);
+  filter: blur(.2px);
+  transform: rotate(-28deg);
+}
+
+.membrane-shell.is-beautified .membrane-channel {
+  border-color: rgba(78, 101, 96, .32);
+  color: var(--beauty-muted-ink);
+  background: rgba(244, 245, 239, .9);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .88),
+    0 4px 10px rgba(49, 67, 61, .08);
+  transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.membrane-shell.is-beautified .membrane-channel-art {
+  filter: grayscale(.92) saturate(.25) contrast(.94) hue-rotate(var(--protein-hue));
+  opacity: .42;
+}
+
+.membrane-shell.is-beautified .membrane-channel > b,
+.membrane-shell.is-beautified .membrane-channel small {
+  text-shadow: 0 1px 3px rgba(255, 255, 252, .96), 0 0 6px rgba(255, 255, 252, .88);
+}
+
+.membrane-shell.is-beautified .membrane-channel.is-open .membrane-channel-art {
+  filter: grayscale(0) saturate(.96) hue-rotate(var(--protein-hue)) drop-shadow(0 5px 8px rgba(31, 96, 94, .2));
+  opacity: .9;
+  transform: scale(1.02);
+}
+
+.membrane-shell.is-beautified .membrane-channel.sodium.is-open {
+  border-color: var(--beauty-sodium);
+  color: var(--beauty-sodium-ink);
+  background: rgba(226, 248, 247, .96);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .9),
+    0 0 0 3px rgba(22, 166, 173, .1),
+    0 7px 18px rgba(22, 166, 173, .2);
+}
+
+.membrane-shell.is-beautified .membrane-channel.potassium.is-open {
+  border-color: var(--beauty-potassium);
+  color: #8c5718;
+  background: rgba(255, 244, 222, .97);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .9),
+    0 0 0 3px rgba(237, 157, 56, .1),
+    0 7px 18px rgba(204, 125, 25, .18);
+}
+
+.membrane-shell.is-beautified .membrane-ion-stream::before {
+  width: 4px;
+  border-color: color-mix(in srgb, var(--stream-color) 62%, white);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in srgb, var(--stream-color) 22%, transparent) 18%,
+    color-mix(in srgb, var(--stream-color) 48%, transparent) 50%,
+    color-mix(in srgb, var(--stream-color) 22%, transparent) 82%,
+    transparent
+  );
+  box-shadow: 0 0 8px color-mix(in srgb, var(--stream-color) 28%, transparent);
+}
+
+.membrane-shell.is-beautified .membrane-ion-stream strong {
+  border-color: color-mix(in srgb, var(--stream-color) 72%, #49635f);
+  color: color-mix(in srgb, var(--stream-color) 72%, #27413e);
+  background: rgba(255, 255, 252, .92);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .92),
+    0 4px 12px rgba(35, 65, 61, .09);
+  font-weight: 850;
+  letter-spacing: .015em;
+}
+
+.membrane-shell.is-beautified .membrane-crossing-ion {
+  border-width: 1px;
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, .58),
+    0 4px 10px color-mix(in srgb, var(--stream-color) 26%, transparent);
+}
+
+.membrane-shell.is-beautified .membrane-stimulus > span {
+  border-color: var(--beauty-curve);
+  color: var(--beauty-curve-ink);
+  background: rgba(255, 244, 241, .94);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .92),
+    0 5px 14px rgba(241, 95, 80, .13);
+}
+
+.membrane-shell.is-beautified .membrane-stimulus > i {
+  width: 4px;
+  background: linear-gradient(var(--beauty-curve), #f3a15c);
+  box-shadow: 0 0 7px #fff, 0 0 16px rgba(241, 95, 80, .62);
+}
+
+.membrane-shell.is-beautified .membrane-stimulus > b {
+  border-color: var(--beauty-curve);
+  border-width: 3px;
+}
+
+/* Seven-step process and explanation */
+.membrane-shell.is-beautified .membrane-stage-guide {
+  gap: 12px;
+}
+
+.membrane-shell.is-beautified .membrane-stage-nav {
+  position: relative;
+  isolation: isolate;
+  border-color: var(--beauty-line-strong);
+  background: rgba(255, 255, 252, .72);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .92),
+    0 10px 28px rgba(52, 76, 67, .07);
+  backdrop-filter: blur(12px) saturate(1.08);
+}
+
+.membrane-shell.is-beautified .membrane-stage-nav::before {
+  position: absolute;
+  z-index: -1;
+  right: 7%;
+  bottom: 8px;
+  left: 7%;
+  height: 2px;
+  border-radius: 999px;
+  content: "";
+  background: rgba(63, 100, 95, .14);
+}
+
+.membrane-shell.is-beautified .membrane-stage-nav button {
+  min-height: 70px;
+  border-right-color: rgba(51, 90, 86, .12);
+  color: var(--beauty-muted-ink);
+  background: transparent;
+  transition: color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.membrane-shell.is-beautified .membrane-stage-nav button::after {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 8px;
+  left: 0;
+  height: 2px;
+  content: "";
+  background: transparent;
+}
+
+.membrane-shell.is-beautified .membrane-stage-nav button b {
+  color: var(--beauty-muted-ink);
+  font-weight: 850;
+}
+
+.membrane-shell.is-beautified .membrane-stage-nav button i {
+  color: var(--beauty-sodium-ink);
+}
+
+.membrane-shell.is-beautified .membrane-stage-nav button:hover {
+  color: var(--beauty-ink);
+  background: rgba(22, 166, 173, .055);
+}
+
+.membrane-shell.is-beautified .membrane-stage-nav button[aria-pressed="true"] {
+  color: #fff;
+  background: linear-gradient(145deg, var(--beauty-focus), #0c8b91);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .2),
+    0 8px 20px rgba(8, 116, 122, .2);
+}
+
+.membrane-shell.is-beautified .membrane-stage-nav button[aria-pressed="true"] b,
+.membrane-shell.is-beautified .membrane-stage-nav button[aria-pressed="true"] i {
+  color: #fff;
+}
+
+.membrane-shell.is-beautified .membrane-stage-nav button[aria-pressed="true"]::after {
+  background: rgba(255, 255, 255, .82);
+}
+
+.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(1)[aria-pressed="true"]) button:nth-child(-n + 1)::after,
+.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(2)[aria-pressed="true"]) button:nth-child(-n + 2)::after,
+.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(3)[aria-pressed="true"]) button:nth-child(-n + 3)::after,
+.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(4)[aria-pressed="true"]) button:nth-child(-n + 4)::after,
+.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(5)[aria-pressed="true"]) button:nth-child(-n + 5)::after,
+.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(6)[aria-pressed="true"]) button:nth-child(-n + 6)::after,
+.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(7)[aria-pressed="true"]) button:nth-child(-n + 7)::after {
+  background: var(--beauty-sodium);
+}
+
+.membrane-shell.is-beautified .membrane-stage-detail {
+  position: relative;
+  overflow: hidden;
+  border-color: var(--beauty-line-strong);
+  background:
+    linear-gradient(110deg, rgba(255, 255, 255, .88), rgba(244, 248, 241, .82)),
+    var(--beauty-paper-solid);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .92),
+    0 10px 28px rgba(52, 76, 67, .07);
+}
+
+.membrane-shell.is-beautified .membrane-stage-detail::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  content: "";
+  background: linear-gradient(var(--beauty-sodium), var(--beauty-potassium));
+}
+
+.membrane-shell.is-beautified .membrane-stage-detail header {
+  padding-left: 4px;
+}
+
+.membrane-shell.is-beautified .membrane-stage-detail header > span {
+  color: var(--beauty-sodium-ink);
+}
+
+.membrane-shell.is-beautified .membrane-stage-detail header strong,
+.membrane-shell.is-beautified .membrane-stage-detail > div p {
+  color: var(--beauty-ink);
+}
+
+.membrane-shell.is-beautified .membrane-stage-detail header p,
+.membrane-shell.is-beautified .membrane-stage-detail > div b {
+  color: var(--beauty-muted-ink);
+}
+
+/* Floating experiment dock */
+.membrane-shell.is-beautified .membrane-controls {
+  border-color: var(--beauty-line-strong);
+  background: rgba(255, 255, 252, .76);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .94),
+    0 14px 34px rgba(47, 70, 62, .12);
+  backdrop-filter: blur(16px) saturate(1.1);
+}
+
+.membrane-shell.is-beautified .membrane-intensity-control legend {
+  color: var(--beauty-muted-ink);
+}
+
+.membrane-shell.is-beautified .membrane-intensity-control button,
+.membrane-shell.is-beautified .membrane-transport button,
+.membrane-shell.is-beautified .membrane-speed button {
+  min-height: 44px;
+  border-color: var(--beauty-line-strong);
+  color: var(--beauty-ink);
+  background: rgba(255, 255, 252, .88);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9);
+  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.membrane-shell.is-beautified .membrane-intensity-control button small {
+  color: var(--beauty-muted-ink);
+}
+
+.membrane-shell.is-beautified .membrane-intensity-control button:hover,
+.membrane-shell.is-beautified .membrane-transport .membrane-reset:hover,
+.membrane-shell.is-beautified .membrane-speed button:hover {
+  border-color: rgba(8, 116, 122, .48);
+  background: rgba(232, 245, 241, .94);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .94), 0 4px 10px rgba(36, 75, 70, .08);
+}
+
+.membrane-shell.is-beautified .membrane-intensity-control button[aria-pressed="true"] {
+  border-color: var(--beauty-curve);
+  color: var(--beauty-curve-ink);
+  background: rgba(255, 237, 232, .96);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .92),
+    0 0 0 2px rgba(241, 95, 80, .08);
+}
+
+.membrane-shell.is-beautified .membrane-intensity-control button[aria-pressed="true"] small {
+  color: var(--beauty-curve-ink);
+}
+
+.membrane-shell.is-beautified .membrane-transport .membrane-play {
+  min-width: 92px;
+  border-color: var(--beauty-focus);
+  color: #fff;
+  background: linear-gradient(145deg, var(--beauty-focus), #0e969c);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .2),
+    0 7px 16px rgba(8, 116, 122, .2);
+}
+
+.membrane-shell.is-beautified .membrane-transport .membrane-play:hover {
+  border-color: #075f64;
+  background: linear-gradient(145deg, #076a70, #0b858b);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .22),
+    0 8px 18px rgba(8, 116, 122, .24);
+}
+
+.membrane-shell.is-beautified .membrane-transport .membrane-reset {
+  color: var(--beauty-muted-ink);
+}
+
+.membrane-shell.is-beautified .membrane-speed {
+  border-color: var(--beauty-line-strong);
+  background: rgba(239, 244, 239, .78);
+  box-shadow: inset 0 1px 2px rgba(48, 70, 63, .06);
+}
+
+.membrane-shell.is-beautified .membrane-speed button {
+  min-height: 34px;
+  border-right-color: var(--beauty-line-strong);
+  color: var(--beauty-muted-ink);
+  background: transparent;
+  box-shadow: none;
+}
+
+.membrane-shell.is-beautified .membrane-speed button[aria-pressed="true"] {
+  color: var(--beauty-ink);
+  background: var(--beauty-paper-solid);
+  box-shadow: 0 2px 7px rgba(45, 71, 64, .12);
+}
+
+.membrane-shell.is-beautified .membrane-compare-toggle {
+  color: var(--beauty-muted-ink);
+}
+
+.membrane-shell.is-beautified .membrane-compare-toggle > span {
+  border-color: var(--beauty-line-strong);
+  background: #dfe8e3;
+  box-shadow: inset 0 1px 3px rgba(44, 69, 62, .11);
+}
+
+.membrane-shell.is-beautified .membrane-compare-toggle > span::after {
+  background: #6e827e;
+  box-shadow: 0 2px 5px rgba(39, 61, 55, .2);
+}
+
+.membrane-shell.is-beautified .membrane-compare-toggle input:checked + span {
+  border-color: var(--beauty-potassium);
+  background: rgba(255, 232, 193, .92);
+}
+
+.membrane-shell.is-beautified .membrane-compare-toggle input:checked + span::after {
+  background: #c9791d;
+}
+
+.membrane-shell.is-beautified button:focus-visible,
+.membrane-shell.is-beautified input:focus-visible,
+.membrane-shell.is-beautified .membrane-compare-toggle input:focus-visible + span {
+  outline: 3px solid var(--beauty-focus);
+  outline-offset: 2px;
+}
+
+.membrane-shell.is-beautified button:active {
+  box-shadow: inset 0 2px 5px rgba(25, 58, 54, .13);
+}
+
+@media (max-width: 800px) {
+  .membrane-shell.is-beautified::before {
+    background-size: 58px 58px;
+    opacity: .52;
+  }
+
+  .membrane-shell.is-beautified .membrane-process-canvas,
+  .membrane-shell.is-beautified .membrane-stage-nav,
+  .membrane-shell.is-beautified .membrane-stage-detail,
+  .membrane-shell.is-beautified .membrane-controls,
+  .membrane-shell.is-beautified .membrane-scene {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .84), 0 4px 10px rgba(47, 70, 62, .055);
+    backdrop-filter: none;
+  }
+
+  .membrane-shell.is-beautified .membrane-stage-guide {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: 3px;
+  }
+
+  .membrane-shell.is-beautified .membrane-stage-nav {
+    height: 28px;
+  }
+
+  .membrane-shell.is-beautified .membrane-stage-nav::before,
+  .membrane-shell.is-beautified .membrane-stage-nav button::after {
+    bottom: 2px;
+    height: 1px;
+  }
+
+  .membrane-shell.is-beautified .membrane-stage-nav button {
+    min-height: 28px;
+  }
+
+  .membrane-shell.is-beautified .membrane-stage-detail {
+    padding: 3px 6px;
+  }
+
+  .membrane-shell.is-beautified .membrane-lipid-field {
+    gap: 2px;
+  }
+
+  .membrane-shell.is-beautified .membrane-particle {
+    box-shadow:
+      inset 0 1px 2px rgba(255, 255, 255, .48),
+      0 2px 5px rgba(41, 77, 72, .12);
+  }
+
+  .membrane-shell.is-beautified .membrane-particle::after {
+    top: 3px;
+    left: 4px;
+    width: 6px;
+    height: 3px;
+  }
+
+  .membrane-shell.is-beautified .membrane-channel.sodium.is-open,
+  .membrane-shell.is-beautified .membrane-channel.potassium.is-open {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .86), 0 3px 8px rgba(47, 70, 62, .1);
+  }
+
+  .membrane-shell.is-beautified .membrane-stimulus > i {
+    box-shadow: 0 0 5px #fff, 0 0 10px rgba(241, 95, 80, .46);
+  }
+
+  .membrane-shell.is-beautified .membrane-controls {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 4px 6px;
+  }
+
+  .membrane-shell.is-beautified .membrane-intensity-control button,
+  .membrane-shell.is-beautified .membrane-transport button {
+    min-height: 32px;
+  }
+
+  .membrane-shell.is-beautified .membrane-transport .membrane-play {
+    min-width: 58px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .membrane-shell.is-beautified *,
+  .membrane-shell.is-beautified *::before,
+  .membrane-shell.is-beautified *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

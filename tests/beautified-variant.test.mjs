@@ -75,6 +75,15 @@ test("beautified CSS is scoped and defines the bio-lab visual system", async () 
   assert.match(css, /backdrop-filter:\s*blur/);
 });
 
+test("beautified membrane and controls expose the required visual states", async () => {
+  const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
+  assert.match(css, /is-beautified \.membrane-particle::after/);
+  assert.match(css, /is-beautified \.membrane-channel\.sodium\.is-open/);
+  assert.match(css, /is-beautified \.membrane-channel\.potassium\.is-open/);
+  assert.match(css, /is-beautified \.membrane-stage-nav button\[aria-pressed="true"\]/);
+  assert.match(css, /is-beautified \.membrane-transport \.membrane-play/);
+});
+
 test("beautified text inks and canvas focus ring meet contrast thresholds", async () => {
   const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
   const surface = cssHexToken(css, "beauty-paper-solid");
