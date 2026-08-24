@@ -24,6 +24,7 @@
 
 **Files:**
 - Create: `app/beautified/page.tsx`
+- Create: `models/03-membrane-potential-curve/membrane-beautified.css`
 - Create: `models/03-membrane-potential-curve/visual-theme.ts`
 - Create: `tests/beautified-variant.test.mjs`
 - Modify: `models/03-membrane-potential-curve/MembraneCurveLab.tsx`
@@ -90,6 +91,14 @@ export default function BeautifiedPage() {
 
 In `MembraneCurveLab`, add the optional prop, keep the original class literal unchanged for the default branch, and pass the variant to `CurveCanvas`.
 
+Create the stylesheet boundary with one inert scoped rule so this task remains independently buildable:
+
+```css
+.membrane-shell.is-beautified {
+  /* Visual tokens are added in Task 3; this selector is intentionally inert. */
+}
+```
+
 - [ ] **Step 4: Run the focused test and verify GREEN**
 
 Run: `node --test --experimental-strip-types tests/beautified-variant.test.mjs`
@@ -99,7 +108,7 @@ Expected: PASS.
 - [ ] **Step 5: Commit the route boundary**
 
 ```bash
-git add app/beautified/page.tsx models/03-membrane-potential-curve/visual-theme.ts models/03-membrane-potential-curve/MembraneCurveLab.tsx models/03-membrane-potential-curve/CurveCanvas.tsx tests/beautified-variant.test.mjs
+git add app/beautified/page.tsx models/03-membrane-potential-curve/membrane-beautified.css models/03-membrane-potential-curve/visual-theme.ts models/03-membrane-potential-curve/MembraneCurveLab.tsx models/03-membrane-potential-curve/CurveCanvas.tsx tests/beautified-variant.test.mjs
 git commit -m "feat: add isolated beautified lab route"
 ```
 
@@ -178,7 +187,7 @@ git commit -m "feat: theme the beautified curve canvas"
 ### Task 3: Build the scoped modern bio-lab surface system
 
 **Files:**
-- Create: `models/03-membrane-potential-curve/membrane-beautified.css`
+- Modify: `models/03-membrane-potential-curve/membrane-beautified.css`
 - Modify: `tests/beautified-variant.test.mjs`
 
 **Interfaces:**
