@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { getCurveSnapshot } from "./simulation";
 import type { CurveIntensity, CurveSnapshot } from "./types";
+import { formatMembranePotential } from "./voltage-format";
 
 const DURATION = 6;
 const FULL_CURVE_SEGMENTS = 240;
@@ -181,7 +182,7 @@ export function CurveCanvas({ time, intensity, snapshot, compare, onTimeChange }
           <span>膜电位曲线</span>
           <small>播放形成曲线，也可拖动回看</small>
         </div>
-        <strong>{snapshot.mv > 0 ? "+" : ""}{snapshot.mv.toFixed(0)} mV</strong>
+        <strong>{formatMembranePotential(snapshot.mv)}</strong>
       </figcaption>
       <canvas
         ref={canvasRef}
@@ -191,7 +192,7 @@ export function CurveCanvas({ time, intensity, snapshot, compare, onTimeChange }
         aria-valuemin={0}
         aria-valuemax={DURATION}
         aria-valuenow={Number(time.toFixed(1))}
-        aria-valuetext={`${stageLabel(snapshot.stage)}，${snapshot.mv.toFixed(0)} mV`}
+        aria-valuetext={`${stageLabel(snapshot.stage)}，${formatMembranePotential(snapshot.mv)}`}
         data-interactive="true"
         onPointerDown={(event) => {
           dragging.current = true;

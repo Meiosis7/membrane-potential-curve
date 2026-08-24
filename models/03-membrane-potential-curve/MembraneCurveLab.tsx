@@ -6,6 +6,7 @@ import { MembraneView } from "./MembraneView";
 import { StageExplanation } from "./StageExplanation";
 import { advancePlayback, getStagePlaybackEnd } from "./playback";
 import { getCurveSnapshot } from "./simulation";
+import { formatMembranePotential } from "./voltage-format";
 import type { PlaybackSpeed } from "./playback";
 import type { CurveIntensity, CurveStage } from "./types";
 
@@ -143,7 +144,7 @@ export function MembraneCurveLab() {
         <div className="membrane-status-line" aria-live="polite">
           <strong aria-label="当前阶段">{STAGE_LABEL[snapshot.stage]}</strong>
           <span aria-label="当前膜电位" className="membrane-voltage">
-            {snapshot.mv > 0 ? "+" : ""}{snapshot.mv.toFixed(0)} mV
+            {formatMembranePotential(snapshot.mv)}
           </span>
           <span aria-label="主要离子运动">{ION_LABEL[snapshot.ionFlow]}</span>
         </div>
