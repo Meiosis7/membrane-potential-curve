@@ -167,22 +167,40 @@
 }
 
 .membrane-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  display: grid;
+  gap: 7px;
   min-width: 0;
 }
 
 .membrane-brand {
-  flex: 0 0 auto;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
 }
 
-.membrane-eyebrow {
-  margin: 0 0 3px;
+.membrane-series-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   color: var(--mem-sodium);
   font-size: 10px;
   font-weight: 800;
-  letter-spacing: .16em;
+  letter-spacing: .08em;
+}
+
+.membrane-series-line b {
+  color: var(--mem-muted);
+  font-size: inherit;
+  white-space: nowrap;
+}
+
+.membrane-title-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
 }
 
 .membrane-header h1 {
@@ -190,11 +208,14 @@
   font-size: clamp(29px, 2.6vw, 40px);
   line-height: 1;
   letter-spacing: -.04em;
+  text-align: center;
 }
 
 .membrane-live-state {
+  position: absolute;
+  top: 50%;
+  right: 0;
   display: inline-flex;
-  flex: 0 0 auto;
   align-items: center;
   gap: 7px;
   padding: 7px 10px;
@@ -203,6 +224,7 @@
   color: var(--mem-muted);
   background: rgba(255, 255, 255, .7);
   font-size: 11px;
+  transform: translateY(-50%);
 }
 
 .membrane-live-state > span {
@@ -219,8 +241,9 @@
 
 .membrane-status-line {
   display: flex;
+  justify-self: center;
   min-width: 0;
-  margin-left: auto;
+  margin: 0;
   overflow: hidden;
   border: 1px solid var(--mem-line);
   border-radius: 999px;
@@ -372,7 +395,7 @@
 
 .membrane-view-card {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr);
   height: 100%;
   padding: clamp(14px, 1.4vw, 20px);
   border-left: 1px solid var(--mem-line);
@@ -425,42 +448,6 @@
 .membrane-intracellular .membrane-compartment-label {
   top: auto;
   bottom: 10px;
-}
-
-.membrane-ion-counts {
-  position: absolute;
-  z-index: 7;
-  top: 8px;
-  right: 9px;
-  display: flex;
-  gap: 5px;
-  animation: ion-count-pop 360ms ease-out;
-}
-
-.membrane-ion-counts > b {
-  padding: 3px 7px;
-  border: 1px solid currentColor;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, .9);
-  box-shadow: 0 3px 10px rgba(24, 49, 59, .08);
-  font-size: 9px;
-  font-weight: 850;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.membrane-ion-counts > b.sodium {
-  color: var(--mem-sodium);
-}
-
-.membrane-ion-counts > b.potassium {
-  color: var(--mem-potassium);
-}
-
-@keyframes ion-count-pop {
-  0% { opacity: .35; transform: scale(.82); }
-  60% { transform: scale(1.08); }
-  100% { opacity: 1; transform: scale(1); }
 }
 
 .membrane-particle {
@@ -837,24 +824,9 @@
   to { opacity: 0; transform: scale(1.65); }
 }
 
-.membrane-polarity-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  color: var(--mem-muted);
-  font-size: 10px;
-}
-
-.membrane-polarity-bar i {
-  width: 28px;
-  height: 1px;
-  background: var(--mem-line-strong);
-}
-
 .membrane-controls {
   display: grid;
-  grid-template-columns: auto auto minmax(220px, 1fr) auto;
+  grid-template-columns: auto auto minmax(0, 1fr);
   align-items: center;
   gap: 14px;
   min-height: 0;
@@ -872,8 +844,7 @@
   border: 0;
 }
 
-.membrane-intensity-control legend,
-.membrane-timeline label {
+.membrane-intensity-control legend {
   margin-bottom: 7px;
   color: var(--mem-muted);
   font-size: 10px;
@@ -951,38 +922,10 @@
   color: var(--mem-muted);
 }
 
-.membrane-timeline {
-  display: grid;
-  gap: 7px;
-  min-width: 0;
-}
-
-.membrane-timeline > span {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.membrane-timeline label {
-  margin: 0;
-}
-
-.membrane-timeline output {
-  color: var(--mem-curve);
-  font-size: 12px;
-  font-variant-numeric: tabular-nums;
-}
-
-.membrane-timeline input {
-  width: 100%;
-  min-height: 24px;
-  margin: 0;
-  accent-color: var(--mem-curve);
-}
-
 .membrane-options {
   display: flex;
   align-items: center;
+  justify-self: end;
   gap: 14px;
   min-height: 44px;
 }
@@ -1125,7 +1068,7 @@
   }
 
   .membrane-controls {
-    grid-template-columns: auto auto minmax(150px, 1fr) auto;
+    grid-template-columns: auto auto minmax(0, 1fr);
     gap: 8px;
   }
 
@@ -1145,7 +1088,6 @@
     padding-block: 9px;
   }
 
-  .membrane-eyebrow,
   .membrane-curve-card figcaption small,
   .membrane-view-card > header small {
     display: none;
@@ -1197,15 +1139,22 @@
   }
 
   .membrane-header {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    gap: 4px 6px;
+    gap: 4px;
     margin: 0;
   }
 
-  .membrane-eyebrow {
-    display: none;
+  .membrane-brand {
+    gap: 2px;
+  }
+
+  .membrane-series-line {
+    gap: 8px;
+    font-size: 7px;
+    letter-spacing: .03em;
+  }
+
+  .membrane-title-row {
+    min-height: 27px;
   }
 
   .membrane-header h1 {
@@ -1220,7 +1169,6 @@
 
   .membrane-status-line {
     display: grid;
-    grid-column: 1 / -1;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     width: 100%;
     margin: 0;
@@ -1378,7 +1326,7 @@
   }
 
   .membrane-view-card {
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr);
     height: 100%;
     min-height: 0;
     padding: 6px;
@@ -1426,17 +1374,6 @@
 
   .membrane-intracellular .membrane-compartment-label {
     bottom: 4px;
-  }
-
-  .membrane-ion-counts {
-    top: 4px;
-    right: 5px;
-    gap: 3px;
-  }
-
-  .membrane-ion-counts > b {
-    padding: 2px 4px;
-    font-size: 7px;
   }
 
   .membrane-particle {
@@ -1519,26 +1456,16 @@
     border-width: 3px;
   }
 
-  .membrane-polarity-bar {
-    gap: 5px;
-    font-size: 8px;
-  }
-
-  .membrane-polarity-bar i {
-    width: 16px;
-  }
-
   .membrane-controls {
     grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto;
     gap: 3px 6px;
     margin: 0;
     padding: 4px 6px;
     border-radius: 10px;
   }
 
-  .membrane-intensity-control legend,
-  .membrane-timeline label {
+  .membrane-intensity-control legend {
     display: none;
   }
 
@@ -1577,24 +1504,6 @@
 
   .membrane-transport .membrane-play {
     min-width: 58px;
-  }
-
-  .membrane-timeline {
-    grid-column: 1 / -1;
-    gap: 1px;
-  }
-
-  .membrane-timeline > span {
-    min-height: 8px;
-  }
-
-  .membrane-timeline output {
-    margin-left: auto;
-    font-size: 8px;
-  }
-
-  .membrane-timeline input {
-    min-height: 18px;
   }
 
   .membrane-options {

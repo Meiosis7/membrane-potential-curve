@@ -128,12 +128,17 @@ export function MembraneCurveLab() {
     >
       <header className="membrane-header">
         <div className="membrane-brand">
-          <p className="membrane-eyebrow">选择性必修1 · 神经冲动的传导</p>
-          <h1 id="membrane-title">膜电位变化曲线</h1>
-        </div>
-        <div className="membrane-live-state" aria-live="polite">
-          <span className={playing ? "is-running" : ""} aria-hidden="true" />
-          {playing ? "正在运行" : "已暂停"}
+          <div className="membrane-series-line">
+            <span>选择性必修1·神经冲动的传导</span>
+            <b>一生儿高中生物一本通</b>
+          </div>
+          <div className="membrane-title-row">
+            <h1 id="membrane-title">膜电位变化曲线</h1>
+            <div className="membrane-live-state" aria-live="polite">
+              <span className={playing ? "is-running" : ""} aria-hidden="true" />
+              {playing ? "正在运行" : "已暂停"}
+            </div>
+          </div>
         </div>
         <div className="membrane-status-line" aria-live="polite">
           <strong aria-label="当前阶段">{STAGE_LABEL[snapshot.stage]}</strong>
@@ -187,24 +192,6 @@ export function MembraneCurveLab() {
             {playLabel}
           </button>
           <button type="button" className="membrane-reset" onClick={reset}>重置</button>
-        </div>
-
-        <div className="membrane-timeline">
-          <span>
-            <label htmlFor="membrane-time">时间轴</label>
-            <output>{time.toFixed(1)}</output>
-          </span>
-          <input
-            id="membrane-time"
-            aria-label="时间轴"
-            aria-valuetext={`${time.toFixed(1)} 时间单位`}
-            type="range"
-            min="0"
-            max={DURATION}
-            step="0.1"
-            value={time}
-            onChange={(event) => changeTime(Number(event.target.value))}
-          />
         </div>
 
         <div className="membrane-options">

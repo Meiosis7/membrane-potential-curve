@@ -133,14 +133,6 @@ export function MembraneView({ snapshot, playing, time, intensity }: MembraneVie
 
         <div className="membrane-compartment membrane-extracellular">
           <span className="membrane-compartment-label">膜外 <b>{insidePositive ? "−" : "+"}</b></span>
-          <span
-            key={`outside-${visual.sodium.outside}-${visual.potassium.outside}`}
-            className="membrane-ion-counts"
-            aria-label={`膜外 Na⁺ ${visual.sodium.outside} 个，K⁺ ${visual.potassium.outside} 个`}
-          >
-            <b className="sodium">Na⁺ ×{visual.sodium.outside}</b>
-            <b className="potassium">K⁺ ×{visual.potassium.outside}</b>
-          </span>
           {renderParticles(PARTICLE_POSITIONS.sodiumOutside, visual.sodium.outside, "sodium", "outside")}
           {renderParticles(PARTICLE_POSITIONS.potassiumOutside, visual.potassium.outside, "potassium", "outside")}
         </div>
@@ -163,14 +155,6 @@ export function MembraneView({ snapshot, playing, time, intensity }: MembraneVie
 
         <div className="membrane-compartment membrane-intracellular">
           <span className="membrane-compartment-label">膜内 <b>{insidePositive ? "+" : "−"}</b></span>
-          <span
-            key={`inside-${visual.sodium.inside}-${visual.potassium.inside}`}
-            className="membrane-ion-counts"
-            aria-label={`膜内 Na⁺ ${visual.sodium.inside} 个，K⁺ ${visual.potassium.inside} 个`}
-          >
-            <b className="sodium">Na⁺ ×{visual.sodium.inside}</b>
-            <b className="potassium">K⁺ ×{visual.potassium.inside}</b>
-          </span>
           {renderParticles(PARTICLE_POSITIONS.potassiumInside, visual.potassium.inside, "potassium", "inside")}
           {renderParticles(PARTICLE_POSITIONS.sodiumInside, visual.sodium.inside, "sodium", "inside")}
         </div>
@@ -179,11 +163,6 @@ export function MembraneView({ snapshot, playing, time, intensity }: MembraneVie
         {visual.potassiumCrossing && <IonStream ion="potassium" />}
       </div>
 
-      <div className="membrane-polarity-bar">
-        <span>膜外{insidePositive ? "相对为负" : "相对为正"}</span>
-        <i aria-hidden="true" />
-        <span>膜内{insidePositive ? "相对为正" : "相对为负"}</span>
-      </div>
     </section>
   );
 }
