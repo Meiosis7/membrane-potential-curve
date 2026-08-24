@@ -6,6 +6,10 @@
   --beauty-potassium: #ed9d38;
   --beauty-curve: #f15f50;
   --beauty-violet: #796cc8;
+  --beauty-sodium-ink: #087078;
+  --beauty-curve-ink: #a9322a;
+  --beauty-muted-ink: #526566;
+  --beauty-focus: #08747a;
   --beauty-paper: rgba(255, 255, 252, .9);
   --beauty-paper-solid: #fffef9;
   --beauty-paper-soft: rgba(239, 246, 241, .74);
@@ -41,12 +45,12 @@
 }
 
 .membrane-shell.is-beautified .membrane-series-line {
-  color: var(--beauty-sodium);
+  color: var(--beauty-sodium-ink);
   font-weight: 850;
 }
 
 .membrane-shell.is-beautified .membrane-series-line b {
-  color: var(--beauty-muted);
+  color: var(--beauty-muted-ink);
   font-weight: 700;
 }
 
@@ -98,11 +102,11 @@
 }
 
 .membrane-shell.is-beautified .membrane-status-line span:last-child {
-  color: var(--beauty-muted);
+  color: var(--beauty-muted-ink);
 }
 
 .membrane-shell.is-beautified .membrane-status-line .membrane-voltage {
-  color: var(--beauty-curve);
+  color: var(--beauty-curve-ink);
   font-weight: 900;
   letter-spacing: -.015em;
 }
@@ -164,19 +168,19 @@
 
 .membrane-shell.is-beautified .membrane-curve-card figcaption small,
 .membrane-shell.is-beautified .membrane-view-card > header small {
-  color: var(--beauty-muted);
+  color: var(--beauty-muted-ink);
   letter-spacing: .015em;
 }
 
 .membrane-shell.is-beautified .membrane-curve-card figcaption strong {
-  color: var(--beauty-curve);
+  color: var(--beauty-curve-ink);
   font-weight: 900;
   letter-spacing: -.025em;
   text-shadow: 0 6px 18px rgba(241, 95, 80, .13);
 }
 
 .membrane-shell.is-beautified .membrane-view-card > header strong {
-  color: var(--beauty-sodium);
+  color: var(--beauty-sodium-ink);
   font-weight: 850;
 }
 
@@ -191,7 +195,7 @@
 }
 
 .membrane-shell.is-beautified .membrane-curve-card canvas:focus-visible {
-  outline: 3px solid rgba(22, 166, 173, .36);
+  outline: 3px solid var(--beauty-focus);
   outline-offset: 3px;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, .92),

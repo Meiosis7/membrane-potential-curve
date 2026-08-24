@@ -6,6 +6,29 @@ import { getCurveVisualTheme } from "../models/03-membrane-potential-curve/visua
 const repoRoot = new URL("../", import.meta.url);
 const source = (path) => readFile(new URL(path, repoRoot), "utf8");
 
+function cssHexToken(css, name) {
+  const match = css.match(new RegExp(`--${name}:\\s*(#[0-9a-f]{6})`, "i"));
+  assert.ok(match, `missing --${name} hex token`);
+  return match[1];
+}
+
+function relativeLuminance(hex) {
+  const channels = hex
+    .slice(1)
+    .match(/.{2}/g)
+    .map((channel) => parseInt(channel, 16) / 255)
+    .map((channel) => channel <= 0.04045
+      ? channel / 12.92
+      : ((channel + 0.055) / 1.055) ** 2.4);
+  return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+}
+
+function contrastRatio(first, second) {
+  const lighter = Math.max(relativeLuminance(first), relativeLuminance(second));
+  const darker = Math.min(relativeLuminance(first), relativeLuminance(second));
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
 test("the original route keeps the default visual variant", async () => {
   const original = await source("app/page.tsx");
   assert.match(original, /<MembraneCurveLab\s*\/>/);
@@ -50,4 +73,31 @@ test("beautified CSS is scoped and defines the bio-lab visual system", async () 
   assert.match(css, /--beauty-sodium:\s*#16a6ad/);
   assert.match(css, /--beauty-potassium:\s*#ed9d38/);
   assert.match(css, /backdrop-filter:\s*blur/);
+});
+
+test("beautified text inks and canvas focus ring meet contrast thresholds", async () => {
+  const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
+  const surface = cssHexToken(css, "beauty-paper-solid");
+  const textInks = [
+    cssHexToken(css, "beauty-sodium-ink"),
+    cssHexToken(css, "beauty-curve-ink"),
+    cssHexToken(css, "beauty-muted-ink"),
+  ];
+
+  textInks.forEach((ink) => {
+    assert.ok(
+      contrastRatio(ink, surface) >= 4.5,
+      `${ink} must reach 4.5:1 against ${surface}`,
+    );
+  });
+
+  const focus = cssHexToken(css, "beauty-focus");
+  assert.ok(
+    contrastRatio(focus, surface) >= 3,
+    `${focus} must reach 3:1 against ${surface}`,
+  );
+  assert.match(css, /\.membrane-series-line\s*\{[^}]*color:\s*var\(--beauty-sodium-ink\)/s);
+  assert.match(css, /\.membrane-status-line \.membrane-voltage\s*\{[^}]*color:\s*var\(--beauty-curve-ink\)/s);
+  assert.match(css, /\.membrane-view-card > header strong\s*\{[^}]*color:\s*var\(--beauty-sodium-ink\)/s);
+  assert.match(css, /canvas:focus-visible\s*\{[^}]*outline:\s*3px solid var\(--beauty-focus\)/s);
 });
