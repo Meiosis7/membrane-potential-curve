@@ -1,3 +1,200 @@
 .membrane-shell.is-beautified {
-  /* Visual tokens are added in Task 3; this selector is intentionally inert. */
+  --beauty-ink: #14373d;
+  --beauty-ink-soft: #30545a;
+  --beauty-muted: #6a7f80;
+  --beauty-sodium: #16a6ad;
+  --beauty-potassium: #ed9d38;
+  --beauty-curve: #f15f50;
+  --beauty-violet: #796cc8;
+  --beauty-paper: rgba(255, 255, 252, .9);
+  --beauty-paper-solid: #fffef9;
+  --beauty-paper-soft: rgba(239, 246, 241, .74);
+  --beauty-line: rgba(47, 85, 82, .15);
+  --beauty-line-strong: rgba(35, 76, 74, .22);
+  --beauty-shadow: 0 24px 60px rgba(49, 71, 62, .12);
+  position: relative;
+  isolation: isolate;
+  color: var(--beauty-ink);
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 255, 255, .94) 0, rgba(255, 255, 255, 0) 34%),
+    radial-gradient(circle at 88% 4%, rgba(166, 221, 213, .28) 0, rgba(166, 221, 213, 0) 31%),
+    radial-gradient(circle at 64% 94%, rgba(244, 201, 133, .18) 0, rgba(244, 201, 133, 0) 30%),
+    linear-gradient(145deg, #f8f6ee 0%, #eef4ee 52%, #f7f1e7 100%);
+}
+
+.membrane-shell.is-beautified::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background-image:
+    linear-gradient(rgba(32, 81, 78, .025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(32, 81, 78, .025) 1px, transparent 1px);
+  background-size: 38px 38px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, .55), transparent 72%);
+}
+
+.membrane-shell.is-beautified > * {
+  position: relative;
+  z-index: 1;
+}
+
+.membrane-shell.is-beautified .membrane-series-line {
+  color: var(--beauty-sodium);
+  font-weight: 850;
+}
+
+.membrane-shell.is-beautified .membrane-series-line b {
+  color: var(--beauty-muted);
+  font-weight: 700;
+}
+
+.membrane-shell.is-beautified .membrane-header h1 {
+  color: var(--beauty-ink);
+  font-weight: 880;
+  letter-spacing: -.045em;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .86);
+}
+
+.membrane-shell.is-beautified .membrane-live-state {
+  border: 1px solid rgba(50, 91, 87, .16);
+  color: var(--beauty-ink-soft);
+  background: rgba(255, 255, 252, .58);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .78),
+    0 8px 24px rgba(60, 83, 74, .07);
+  backdrop-filter: blur(12px) saturate(1.1);
+}
+
+.membrane-shell.is-beautified .membrane-live-state > span {
+  background: #9bacaa;
+  box-shadow: inset 0 0 0 1px rgba(20, 55, 61, .08);
+}
+
+.membrane-shell.is-beautified .membrane-live-state > span.is-running {
+  background: var(--beauty-sodium);
+  box-shadow:
+    0 0 0 4px rgba(22, 166, 173, .12),
+    0 0 14px rgba(22, 166, 173, .24);
+}
+
+.membrane-shell.is-beautified .membrane-status-line {
+  border: 1px solid rgba(53, 91, 86, .16);
+  background: rgba(255, 255, 252, .66);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .9),
+    0 10px 28px rgba(54, 77, 68, .08);
+  backdrop-filter: blur(14px) saturate(1.08);
+}
+
+.membrane-shell.is-beautified .membrane-status-line strong,
+.membrane-shell.is-beautified .membrane-status-line span {
+  border-right-color: rgba(53, 91, 86, .13);
+}
+
+.membrane-shell.is-beautified .membrane-status-line strong {
+  color: var(--beauty-ink);
+}
+
+.membrane-shell.is-beautified .membrane-status-line span:last-child {
+  color: var(--beauty-muted);
+}
+
+.membrane-shell.is-beautified .membrane-status-line .membrane-voltage {
+  color: var(--beauty-curve);
+  font-weight: 900;
+  letter-spacing: -.015em;
+}
+
+.membrane-shell.is-beautified .membrane-process-canvas {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid var(--beauty-line-strong);
+  background: var(--beauty-paper);
+  box-shadow:
+    var(--beauty-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, .9),
+    inset 0 0 0 1px rgba(255, 255, 255, .24);
+}
+
+.membrane-shell.is-beautified .membrane-process-canvas::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  content: "";
+  background:
+    linear-gradient(110deg, rgba(255, 255, 255, .22), transparent 38%),
+    radial-gradient(circle at 100% 0, rgba(22, 166, 173, .06), transparent 34%);
+}
+
+.membrane-shell.is-beautified .membrane-process-canvas > * {
+  position: relative;
+  z-index: 1;
+}
+
+.membrane-shell.is-beautified .membrane-curve-card {
+  background: rgba(255, 255, 252, .76);
+}
+
+.membrane-shell.is-beautified .membrane-view-card {
+  border-left-color: var(--beauty-line);
+  background:
+    linear-gradient(180deg, rgba(237, 247, 242, .78), rgba(249, 246, 238, .72));
+}
+
+.membrane-shell.is-beautified .membrane-curve-card figcaption,
+.membrane-shell.is-beautified .membrane-view-card > header {
+  align-items: center;
+}
+
+.membrane-shell.is-beautified .membrane-curve-card figcaption > div,
+.membrane-shell.is-beautified .membrane-view-card > header > div {
+  gap: 4px;
+}
+
+.membrane-shell.is-beautified .membrane-curve-card figcaption span,
+.membrane-shell.is-beautified .membrane-view-card > header span {
+  color: var(--beauty-ink);
+  font-weight: 880;
+  letter-spacing: .025em;
+}
+
+.membrane-shell.is-beautified .membrane-curve-card figcaption small,
+.membrane-shell.is-beautified .membrane-view-card > header small {
+  color: var(--beauty-muted);
+  letter-spacing: .015em;
+}
+
+.membrane-shell.is-beautified .membrane-curve-card figcaption strong {
+  color: var(--beauty-curve);
+  font-weight: 900;
+  letter-spacing: -.025em;
+  text-shadow: 0 6px 18px rgba(241, 95, 80, .13);
+}
+
+.membrane-shell.is-beautified .membrane-view-card > header strong {
+  color: var(--beauty-sodium);
+  font-weight: 850;
+}
+
+.membrane-shell.is-beautified .membrane-curve-card canvas {
+  border: 1px solid rgba(46, 88, 83, .17);
+  background:
+    linear-gradient(180deg, rgba(238, 247, 242, .96), rgba(252, 249, 241, .9));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .92),
+    inset 0 0 22px rgba(50, 91, 83, .035),
+    0 7px 20px rgba(52, 76, 67, .045);
+}
+
+.membrane-shell.is-beautified .membrane-curve-card canvas:focus-visible {
+  outline: 3px solid rgba(22, 166, 173, .36);
+  outline-offset: 3px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .92),
+    0 0 0 1px rgba(255, 255, 255, .9),
+    0 0 0 6px rgba(22, 166, 173, .1);
 }

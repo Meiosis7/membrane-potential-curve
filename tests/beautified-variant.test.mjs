@@ -41,3 +41,13 @@ test("the canvas clears its beautified curve shadow color after stroking", async
   const canvas = await source("models/03-membrane-potential-curve/CurveCanvas.tsx");
   assert.match(canvas, /context\.shadowColor = "transparent";/);
 });
+
+test("beautified CSS is scoped and defines the bio-lab visual system", async () => {
+  const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
+  assert.doesNotMatch(css, /^:root/m);
+  assert.doesNotMatch(css, /^\.membrane-(?!shell\.is-beautified)/m);
+  assert.match(css, /\.membrane-shell\.is-beautified\s*\{/);
+  assert.match(css, /--beauty-sodium:\s*#16a6ad/);
+  assert.match(css, /--beauty-potassium:\s*#ed9d38/);
+  assert.match(css, /backdrop-filter:\s*blur/);
+});
