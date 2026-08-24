@@ -84,6 +84,44 @@ test("beautified membrane and controls expose the required visual states", async
   assert.match(css, /is-beautified \.membrane-transport \.membrane-play/);
 });
 
+test("beautified paint leaves responsive stage sizing to the base stylesheet", async () => {
+  const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
+  assert.doesNotMatch(css, /\.membrane-shell\.is-beautified \.membrane-stage-guide\s*\{[^}]*\bgap:/s);
+  assert.doesNotMatch(css, /\.membrane-shell\.is-beautified \.membrane-stage-nav\s*\{[^}]*\bheight:/s);
+  assert.doesNotMatch(css, /\.membrane-shell\.is-beautified \.membrane-stage-nav button\s*\{[^}]*\bmin-height:/s);
+});
+
+test("beautified primary gradients keep white labels at readable contrast", async () => {
+  const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
+  const white = "#ffffff";
+  const actionGradient = [
+    cssHexToken(css, "beauty-action-start"),
+    cssHexToken(css, "beauty-action-end"),
+    cssHexToken(css, "beauty-action-hover-start"),
+    cssHexToken(css, "beauty-action-hover-end"),
+  ];
+
+  actionGradient.forEach((color) => {
+    assert.ok(
+      contrastRatio(color, white) >= 4.5,
+      `${color} must reach 4.5:1 against white labels`,
+    );
+  });
+
+  assert.match(
+    css,
+    /\.membrane-stage-nav button\[aria-pressed="true"\]\s*\{[^}]*background:\s*linear-gradient\(145deg, var\(--beauty-action-start\), var\(--beauty-action-end\)\)/s,
+  );
+  assert.match(
+    css,
+    /\.membrane-transport \.membrane-play\s*\{[^}]*background:\s*linear-gradient\(145deg, var\(--beauty-action-start\), var\(--beauty-action-end\)\)/s,
+  );
+  assert.match(
+    css,
+    /\.membrane-transport \.membrane-play:hover\s*\{[^}]*background:\s*linear-gradient\(145deg, var\(--beauty-action-hover-start\), var\(--beauty-action-hover-end\)\)/s,
+  );
+});
+
 test("beautified text inks and canvas focus ring meet contrast thresholds", async () => {
   const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
   const surface = cssHexToken(css, "beauty-paper-solid");

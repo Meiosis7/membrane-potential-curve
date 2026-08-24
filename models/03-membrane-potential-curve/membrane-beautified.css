@@ -10,6 +10,10 @@
   --beauty-curve-ink: #a9322a;
   --beauty-muted-ink: #526566;
   --beauty-focus: #08747a;
+  --beauty-action-start: #075f66;
+  --beauty-action-end: #08747a;
+  --beauty-action-hover-start: #064f55;
+  --beauty-action-hover-end: #08676c;
   --beauty-paper: rgba(255, 255, 252, .9);
   --beauty-paper-solid: #fffef9;
   --beauty-paper-soft: rgba(239, 246, 241, .74);
@@ -404,10 +408,6 @@
 }
 
 /* Seven-step process and explanation */
-.membrane-shell.is-beautified .membrane-stage-guide {
-  gap: 12px;
-}
-
 .membrane-shell.is-beautified .membrane-stage-nav {
   position: relative;
   isolation: isolate;
@@ -432,7 +432,6 @@
 }
 
 .membrane-shell.is-beautified .membrane-stage-nav button {
-  min-height: 70px;
   border-right-color: rgba(51, 90, 86, .12);
   color: var(--beauty-muted-ink);
   background: transparent;
@@ -466,7 +465,7 @@
 
 .membrane-shell.is-beautified .membrane-stage-nav button[aria-pressed="true"] {
   color: #fff;
-  background: linear-gradient(145deg, var(--beauty-focus), #0c8b91);
+  background: linear-gradient(145deg, var(--beauty-action-start), var(--beauty-action-end));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, .2),
     0 8px 20px rgba(8, 116, 122, .2);
@@ -585,7 +584,7 @@
   min-width: 92px;
   border-color: var(--beauty-focus);
   color: #fff;
-  background: linear-gradient(145deg, var(--beauty-focus), #0e969c);
+  background: linear-gradient(145deg, var(--beauty-action-start), var(--beauty-action-end));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, .2),
     0 7px 16px rgba(8, 116, 122, .2);
@@ -593,7 +592,7 @@
 
 .membrane-shell.is-beautified .membrane-transport .membrane-play:hover {
   border-color: #075f64;
-  background: linear-gradient(145deg, #076a70, #0b858b);
+  background: linear-gradient(145deg, var(--beauty-action-hover-start), var(--beauty-action-hover-end));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, .22),
     0 8px 18px rgba(8, 116, 122, .24);
@@ -673,24 +672,10 @@
     backdrop-filter: none;
   }
 
-  .membrane-shell.is-beautified .membrane-stage-guide {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
-    gap: 3px;
-  }
-
-  .membrane-shell.is-beautified .membrane-stage-nav {
-    height: 28px;
-  }
-
   .membrane-shell.is-beautified .membrane-stage-nav::before,
   .membrane-shell.is-beautified .membrane-stage-nav button::after {
     bottom: 2px;
     height: 1px;
-  }
-
-  .membrane-shell.is-beautified .membrane-stage-nav button {
-    min-height: 28px;
   }
 
   .membrane-shell.is-beautified .membrane-stage-detail {
