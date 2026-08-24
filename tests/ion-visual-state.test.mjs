@@ -21,10 +21,10 @@ test("resting distribution shows sodium mainly outside and potassium mainly insi
   assert.equal(state.potassiumCrossing, false);
 });
 
-test("depolarization moves sodium particles from outside to inside", () => {
+test("reversal polarization continues moving sodium particles inward", () => {
   const state = getIonVisualState(2.8, "threshold", {
     ...restingSnapshot,
-    stage: "depolarization",
+    stage: "peak",
     ionFlow: "sodium-in",
     insidePolarity: "positive",
     mv: 13,
@@ -50,6 +50,19 @@ test("potassium-out stages move potassium particles from inside to outside", () 
   assert.ok(state.potassium.inside < 6);
   assert.equal(state.potassium.inside + state.potassium.outside, 8);
   assert.equal(state.potassiumCrossing, true);
+});
+
+test("potassium redistribution begins with repolarization after the sharp peak", () => {
+  const state = getIonVisualState(4, "threshold", {
+    ...restingSnapshot,
+    stage: "repolarization",
+    ionFlow: "potassium-out",
+    mv: -24,
+    potassiumOpen: true,
+  });
+
+  assert.ok(state.potassium.outside > 2);
+  assert.ok(state.potassium.inside < 6);
 });
 
 test("stimulus pulse appears only near the onset of voltage change", () => {

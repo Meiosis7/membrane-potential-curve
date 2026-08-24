@@ -30,7 +30,7 @@ const STAGE_ANSWERS: Record<CurveStage, CurveAnswer> = {
   },
   peak: {
     stage: "peak",
-    ionFlow: "none",
+    ionFlow: "sodium-in",
     insidePolarity: "positive",
   },
   repolarization: {
@@ -55,7 +55,7 @@ const STAGE_EXPLANATIONS: Record<CurveStage, string> = {
   local: "局部电位期：刺激未达阈值，无主要离子跨膜流动，膜内仍相对为负、膜外相对为正。",
   threshold: "阈电位：膜内仍相对为负、膜外相对为正，达到阈值后将触发Na⁺内流。",
   depolarization: "去极化期：Na⁺大量内流，膜内由负变正、膜外相对为负。",
-  peak: "峰值期：Na⁺内流已停止且K⁺外流尚未成为主要运动，膜内相对为正、膜外相对为负。",
+  peak: "反极化期：Na⁺继续内流，膜电位由0 mV升至约+30 mV的尖峰，膜内相对为正。",
   repolarization: "复极化期：K⁺外流，膜内恢复为相对负、膜外相对正。",
   hyperpolarization: "超极化期：K⁺通道关闭较慢，K⁺继续外流，膜电位短暂低于静息电位。",
   recovery: "恢复静息期：K⁺通道逐渐关闭，膜电位由约−80 mV回到约−70 mV。",
@@ -101,8 +101,8 @@ function interpolate(
 function getActionPotentialStage(time: number): CurveStage {
   if (time < 1) return "resting";
   if (time < 2) return "threshold";
-  if (time < 3) return "depolarization";
-  if (time < 4) return "peak";
+  if (time < 2.65) return "depolarization";
+  if (time < 3) return "peak";
   if (time < 4.8) return "repolarization";
   if (time < 5.3) return "hyperpolarization";
   if (time < 6) return "recovery";
@@ -114,11 +114,11 @@ function getActionPotentialMv(time: number, stage: CurveStage): number {
     case "threshold":
       return interpolate(time, 1, 2, -70, -55);
     case "depolarization":
-      return interpolate(time, 2, 3, -55, 30);
+      return interpolate(time, 2, 2.65, -55, 0);
     case "peak":
-      return 30;
+      return interpolate(time, 2.65, 3, 0, 30);
     case "repolarization":
-      return interpolate(time, 4, 4.8, 30, -70);
+      return interpolate(time, 3, 4.8, 30, -70);
     case "hyperpolarization":
       return interpolate(time, 4.8, 5.3, -70, -80);
     case "recovery":
@@ -156,7 +156,7 @@ export function getCurveSnapshot(
     ...answer,
     mv,
     insidePolarity: getInsidePolarity(mv),
-    sodiumOpen: stage === "depolarization",
+    sodiumOpen: stage === "depolarization" || stage === "peak",
     potassiumOpen:
       stage === "repolarization" ||
       stage === "hyperpolarization" ||

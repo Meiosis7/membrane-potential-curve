@@ -32,9 +32,9 @@ test("stage ranges are continuous and cover the full action potential", () => {
     [
       ["resting", 0, 1],
       ["threshold", 1, 2],
-      ["depolarization", 2, 3],
-      ["peak", 3, 4],
-      ["repolarization", 4, 4.8],
+      ["depolarization", 2, 2.65],
+      ["peak", 2.65, 3],
+      ["repolarization", 3, 4.8],
       ["hyperpolarization", 4.8, 5.3],
       ["recovery", 5.3, 6],
     ],

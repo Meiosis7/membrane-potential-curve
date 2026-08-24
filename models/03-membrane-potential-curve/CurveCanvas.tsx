@@ -55,9 +55,9 @@ function stageInterval(time: number, intensity: CurveIntensity, stage: CurveSnap
   }
   switch (stage) {
     case "threshold": return [1, 2];
-    case "depolarization": return [2, 3];
-    case "peak": return [3, 4];
-    case "repolarization": return [4, 4.8];
+    case "depolarization": return [2, 2.65];
+    case "peak": return [2.65, 3];
+    case "repolarization": return [3, 4.8];
     case "hyperpolarization": return [4.8, 5.3];
     case "recovery": return [5.3, 6];
     default: return time < 1 ? [0, 1] : [6, 6];

@@ -29,8 +29,8 @@ function sodiumTransferred(time: number) {
 }
 
 function potassiumTransferred(time: number) {
-  if (time < 4 || time >= 6) return 0;
-  return Math.round(clampUnit((time - 4) / 2) * 3);
+  if (time < 3 || time >= 6) return 0;
+  return Math.round(clampUnit((time - 3) / 3) * 3);
 }
 
 export function getIonVisualState(
