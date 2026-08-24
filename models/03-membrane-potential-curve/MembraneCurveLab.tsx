@@ -9,6 +9,7 @@ import { getCurveSnapshot } from "./simulation";
 import { formatMembranePotential } from "./voltage-format";
 import type { PlaybackSpeed } from "./playback";
 import type { CurveIntensity, CurveStage } from "./types";
+import type { VisualVariant } from "./visual-theme";
 
 const DURATION = 6;
 
@@ -39,7 +40,11 @@ function clamp(value: number) {
   return Math.min(DURATION, Math.max(0, value));
 }
 
-export function MembraneCurveLab() {
+export interface MembraneCurveLabProps {
+  visualVariant?: VisualVariant;
+}
+
+export function MembraneCurveLab({ visualVariant = "original" }: MembraneCurveLabProps) {
   const [intensity, setIntensity] = useState<CurveIntensity>("threshold");
   const [time, setTime] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -123,7 +128,7 @@ export function MembraneCurveLab() {
 
   return (
     <main
-      className="membrane-shell"
+      className={visualVariant === "beautified" ? "membrane-shell is-beautified" : "membrane-shell"}
       data-layout="single-viewport"
       aria-labelledby="membrane-title"
     >
@@ -156,6 +161,7 @@ export function MembraneCurveLab() {
           intensity={intensity}
           snapshot={snapshot}
           compare={compare}
+          visualVariant={visualVariant}
           onTimeChange={changeTime}
         />
         <MembraneView

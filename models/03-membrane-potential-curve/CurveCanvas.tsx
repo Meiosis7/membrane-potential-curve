@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { getCurveSnapshot } from "./simulation";
 import type { CurveIntensity, CurveSnapshot } from "./types";
+import type { VisualVariant } from "./visual-theme";
 import { formatMembranePotential } from "./voltage-format";
 
 const DURATION = 6;
@@ -14,6 +15,7 @@ export interface CurveCanvasProps {
   intensity: CurveIntensity;
   snapshot: CurveSnapshot;
   compare: boolean;
+  visualVariant?: VisualVariant;
   onTimeChange: (nextTime: number) => void;
 }
 
@@ -65,7 +67,14 @@ function stageInterval(time: number, intensity: CurveIntensity, stage: CurveSnap
   }
 }
 
-export function CurveCanvas({ time, intensity, snapshot, compare, onTimeChange }: CurveCanvasProps) {
+export function CurveCanvas({
+  time,
+  intensity,
+  snapshot,
+  compare,
+  visualVariant = "original",
+  onTimeChange,
+}: CurveCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dragging = useRef(false);
 
@@ -161,7 +170,7 @@ export function CurveCanvas({ time, intensity, snapshot, compare, onTimeChange }
     const observer = new ResizeObserver(draw);
     observer.observe(canvas);
     return () => observer.disconnect();
-  }, [compare, intensity, snapshot, time]);
+  }, [compare, intensity, snapshot, time, visualVariant]);
 
   const updateFromPointer = (clientX: number) => {
     const canvas = canvasRef.current;
