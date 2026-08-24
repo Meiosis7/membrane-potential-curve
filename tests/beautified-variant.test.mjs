@@ -91,6 +91,19 @@ test("beautified paint leaves responsive stage sizing to the base stylesheet", a
   assert.doesNotMatch(css, /\.membrane-shell\.is-beautified \.membrane-stage-nav button\s*\{[^}]*\bmin-height:/s);
 });
 
+test("beautified stage progress keeps the active segment white", async () => {
+  const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
+  assert.match(
+    css,
+    /\.membrane-stage-nav button\[aria-pressed="true"\]::after\s*\{[^}]*background:\s*rgba\(255, 255, 255, \.82\)/s,
+  );
+
+  const cumulativeSelectors = [...css.matchAll(
+    /\.membrane-stage-nav:has\(button:nth-child\((\d)\)\[aria-pressed="true"\]\) button:nth-child\(-n \+ \1\):not\(\[aria-pressed="true"\]\)::after/g,
+  )];
+  assert.equal(cumulativeSelectors.length, 7);
+});
+
 test("beautified primary gradients keep white labels at readable contrast", async () => {
   const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
   const white = "#ffffff";

@@ -480,13 +480,13 @@
   background: rgba(255, 255, 255, .82);
 }
 
-.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(1)[aria-pressed="true"]) button:nth-child(-n + 1)::after,
-.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(2)[aria-pressed="true"]) button:nth-child(-n + 2)::after,
-.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(3)[aria-pressed="true"]) button:nth-child(-n + 3)::after,
-.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(4)[aria-pressed="true"]) button:nth-child(-n + 4)::after,
-.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(5)[aria-pressed="true"]) button:nth-child(-n + 5)::after,
-.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(6)[aria-pressed="true"]) button:nth-child(-n + 6)::after,
-.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(7)[aria-pressed="true"]) button:nth-child(-n + 7)::after {
+.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(1)[aria-pressed="true"]) button:nth-child(-n + 1):not([aria-pressed="true"])::after,
+.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(2)[aria-pressed="true"]) button:nth-child(-n + 2):not([aria-pressed="true"])::after,
+.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(3)[aria-pressed="true"]) button:nth-child(-n + 3):not([aria-pressed="true"])::after,
+.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(4)[aria-pressed="true"]) button:nth-child(-n + 4):not([aria-pressed="true"])::after,
+.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(5)[aria-pressed="true"]) button:nth-child(-n + 5):not([aria-pressed="true"])::after,
+.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(6)[aria-pressed="true"]) button:nth-child(-n + 6):not([aria-pressed="true"])::after,
+.membrane-shell.is-beautified .membrane-stage-nav:has(button:nth-child(7)[aria-pressed="true"]) button:nth-child(-n + 7):not([aria-pressed="true"])::after {
   background: var(--beauty-sodium);
 }
 
