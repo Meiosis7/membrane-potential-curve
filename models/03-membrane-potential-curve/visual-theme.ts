@@ -8,6 +8,7 @@ export interface CurveVisualTheme {
   surfaceFallback: string;
   grid: string;
   threshold: string;
+  thresholdDash: readonly number[];
   stageBand: string;
   cursor: string;
   label: string;
@@ -24,6 +25,7 @@ const ORIGINAL: CurveVisualTheme = {
   surfaceFallback: "#f8faf7",
   grid: "rgba(95, 119, 114, .16)",
   threshold: "rgba(213, 138, 34, .58)",
+  thresholdDash: [6, 5],
   stageBand: "rgba(22, 143, 145, .07)",
   cursor: "rgba(24, 49, 59, .62)",
   label: "#27434c",
@@ -44,6 +46,7 @@ const BEAUTIFIED = {
   surfaceFallback: "#f7f4eb",
   grid: "rgba(44, 78, 76, .14)",
   threshold: "rgba(237, 157, 56, .66)",
+  thresholdDash: [6, 5],
   stageBand: "rgba(22, 166, 173, .09)",
   cursor: "rgba(16, 43, 50, .62)",
   label: "#274a4f",

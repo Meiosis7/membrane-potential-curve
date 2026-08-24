@@ -32,3 +32,12 @@ test("the original canvas palette is preserved and beautified palette is distinc
   assert.notEqual(beautified.surfaceTop, original.surfaceTop);
   assert.equal(beautified.accents.sodium, "#16a6ad");
 });
+
+test("the original canvas threshold dash is preserved", () => {
+  assert.deepEqual(getCurveVisualTheme("original").thresholdDash, [6, 5]);
+});
+
+test("the canvas clears its beautified curve shadow color after stroking", async () => {
+  const canvas = await source("models/03-membrane-potential-curve/CurveCanvas.tsx");
+  assert.match(canvas, /context\.shadowColor = "transparent";/);
+});

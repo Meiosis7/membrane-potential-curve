@@ -108,7 +108,7 @@ export function CurveCanvas({
         context.beginPath();
         context.strokeStyle = mv === -55 ? theme.threshold : theme.grid;
         context.lineWidth = 1;
-        context.setLineDash?.(mv === -55 ? [6, 5] : []);
+        context.setLineDash?.(mv === -55 ? [...theme.thresholdDash] : []);
         context.moveTo(PADDING.left, y(mv));
         context.lineTo(width - PADDING.right, y(mv));
         context.stroke();
@@ -140,7 +140,7 @@ export function CurveCanvas({
         context.stroke();
         if (visualVariant === "beautified" && curveIntensity === intensity) {
           context.shadowBlur = 0;
-          context.shadowColor = theme.cursor;
+          context.shadowColor = "transparent";
         }
         context.setLineDash?.([]);
       });
