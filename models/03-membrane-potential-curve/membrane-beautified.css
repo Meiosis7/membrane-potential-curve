@@ -306,31 +306,30 @@
   border-radius: 0;
   opacity: .92;
   filter: drop-shadow(0 1px 1px rgba(48, 92, 84, .14));
-  background:
-    radial-gradient(circle at 50% 5px, #dff3ef 0 3px, #3f968e 3.5px 5px, transparent 5.5px),
-    radial-gradient(circle at 50% calc(100% - 5px), #dff3ef 0 3px, #3f968e 3.5px 5px, transparent 5.5px);
+  background: none;
 }
 
 .membrane-shell.is-beautified .membrane-lipid-field i::before,
 .membrane-shell.is-beautified .membrane-lipid-field i::after {
   position: absolute;
-  left: 50%;
-  width: 10px;
-  height: 15px;
+  left: calc(50% - 7px);
+  width: 14px;
+  height: 20px;
   content: "";
   background:
-    linear-gradient(82deg, transparent 42%, #9c7d50 44% 54%, transparent 56%) left / 50% 100% no-repeat,
-    linear-gradient(98deg, transparent 42%, #9c7d50 44% 54%, transparent 56%) right / 50% 100% no-repeat;
+    radial-gradient(circle at 50% 5px, #dff3ef 0 3px, #3f968e 3.5px 5px, transparent 5.5px),
+    linear-gradient(84deg, transparent 43%, #9c7d50 45% 53%, transparent 55%) left 1px top 9px / 7px 11px no-repeat,
+    linear-gradient(96deg, transparent 43%, #9c7d50 45% 53%, transparent 55%) right 1px top 9px / 7px 11px no-repeat;
 }
 
 .membrane-shell.is-beautified .membrane-lipid-field i::before {
-  top: 10px;
+  top: 0;
 }
 
 .membrane-shell.is-beautified .membrane-lipid-field i::after {
   top: auto;
   right: auto;
-  bottom: 10px;
+  bottom: 0;
   transform: rotate(180deg);
 }
 
@@ -1052,23 +1051,25 @@
 
   .membrane-shell.is-beautified .membrane-lipid-field i {
     height: 34px;
-    background:
-      radial-gradient(circle at 50% 4px, #dff3ef 0 2.5px, #3f968e 3px 4px, transparent 4.5px),
-      radial-gradient(circle at 50% calc(100% - 4px), #dff3ef 0 2.5px, #3f968e 3px 4px, transparent 4.5px);
   }
 
   .membrane-shell.is-beautified .membrane-lipid-field i::before,
   .membrane-shell.is-beautified .membrane-lipid-field i::after {
-    width: 8px;
-    height: 11px;
+    left: calc(50% - 6px);
+    width: 12px;
+    height: 14px;
+    background:
+      radial-gradient(circle at 50% 4px, #dff3ef 0 2.5px, #3f968e 3px 4px, transparent 4.5px),
+      linear-gradient(84deg, transparent 42%, #9c7d50 44% 54%, transparent 56%) left 1px top 7px / 6px 7px no-repeat,
+      linear-gradient(96deg, transparent 42%, #9c7d50 44% 54%, transparent 56%) right 1px top 7px / 6px 7px no-repeat;
   }
 
   .membrane-shell.is-beautified .membrane-lipid-field i::before {
-    top: 8px;
+    top: 0;
   }
 
   .membrane-shell.is-beautified .membrane-lipid-field i::after {
-    bottom: 8px;
+    bottom: 0;
   }
 
   .membrane-shell.is-beautified .membrane-channel.sodium.is-open,

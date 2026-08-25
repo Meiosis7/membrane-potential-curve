@@ -709,12 +709,14 @@ test("production beautified route renders transparent outlined ions and phosphol
         sodiumBackground: getComputedStyle(sodium).backgroundColor,
         potassiumBackground: getComputedStyle(potassium).backgroundColor,
         spriteDisplay: getComputedStyle(potassium, '::before').display,
-        headBackgrounds: getComputedStyle(lipid).backgroundImage,
+        lipidBackground: getComputedStyle(lipid).backgroundImage,
         upperTail: {
           content: upperTail.content,
+          background: upperTail.backgroundImage,
         },
         lowerTail: {
           content: lowerTail.content,
+          background: lowerTail.backgroundImage,
           transform: lowerTail.transform,
         },
         geometry: {
@@ -730,18 +732,19 @@ test("production beautified route renders transparent outlined ions and phosphol
     assert.equal(visuals.sodiumBackground, "rgba(0, 0, 0, 0)");
     assert.equal(visuals.potassiumBackground, "rgba(0, 0, 0, 0)");
     assert.equal(visuals.spriteDisplay, "none");
-    assert.match(visuals.headBackgrounds, /radial-gradient/);
-    assert.deepEqual(visuals.upperTail, {
-      content: '\"\"',
-    });
+    assert.equal(visuals.lipidBackground, "none");
+    assert.equal((visuals.upperTail.background.match(/radial-gradient/g) || []).length, 1);
+    assert.equal((visuals.upperTail.background.match(/linear-gradient/g) || []).length, 2);
+    assert.equal((visuals.lowerTail.background.match(/radial-gradient/g) || []).length, 1);
+    assert.equal((visuals.lowerTail.background.match(/linear-gradient/g) || []).length, 2);
+    assert.equal(visuals.upperTail.content, '\"\"');
     assert.equal(visuals.lowerTail.content, '\"\"');
     assertHalfTurnMatrix(visuals.lowerTail.transform, scenario.width);
-    assert.ok(visuals.geometry.upperStart > 0, `upper tail must stay below the outer head at ${scenario.width}px`);
-    assert.ok(visuals.geometry.lowerEnd < visuals.geometry.lipidHeight, `lower tail must stay above the inner head at ${scenario.width}px`);
-    assert.ok(visuals.geometry.upperStart < visuals.geometry.lowerStart, `opposed tails must face one another at ${scenario.width}px`);
-    assert.ok(visuals.geometry.lowerStart < visuals.geometry.upperEnd, `opposed tails must intersect near the membrane center at ${scenario.width}px`);
-    assert.ok(visuals.geometry.lowerStart <= visuals.geometry.lipidHeight / 2, `lower tail must reach the membrane center at ${scenario.width}px`);
-    assert.ok(visuals.geometry.upperEnd >= visuals.geometry.lipidHeight / 2, `upper tail must reach the membrane center at ${scenario.width}px`);
+    assert.equal(visuals.geometry.upperStart, 0, `upper phospholipid must begin at the outer edge at ${scenario.width}px`);
+    assert.equal(visuals.geometry.lowerEnd, visuals.geometry.lipidHeight, `lower phospholipid must end at the outer edge at ${scenario.width}px`);
+    assert.ok(visuals.geometry.upperEnd < visuals.geometry.lowerStart, `the two phospholipids must remain visibly separate at ${scenario.width}px`);
+    assert.ok(visuals.geometry.upperEnd < visuals.geometry.lipidHeight / 2, `upper tails must stop before the membrane center at ${scenario.width}px`);
+    assert.ok(visuals.geometry.lowerStart > visuals.geometry.lipidHeight / 2, `lower tails must stop after the membrane center at ${scenario.width}px`);
   }
 
   browser.assertConsoleClean("beautified phospholipid and ion coverage");

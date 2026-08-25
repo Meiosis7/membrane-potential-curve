@@ -111,8 +111,11 @@ test("beautified membrane and controls expose the required visual states", async
 test("beautified membrane draws two opposed phospholipid leaflets", async () => {
   const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
   assert.match(css, /\.membrane-shell\.is-beautified \.membrane-bilayer\s*\{[^}]*background:\s*rgba\(255, 255, 255, \.34\)/s);
-  assert.match(css, /\.membrane-shell\.is-beautified \.membrane-lipid-field i\s*\{[^}]*radial-gradient\([^}]*radial-gradient\(/s);
-  assert.match(css, /\.membrane-shell\.is-beautified \.membrane-lipid-field i::before,[\s\S]*\.membrane-shell\.is-beautified \.membrane-lipid-field i::after\s*\{/s);
+  assert.match(css, /\.membrane-shell\.is-beautified \.membrane-lipid-field i\s*\{[^}]*background:\s*none/s);
+  assert.match(
+    css,
+    /\.membrane-shell\.is-beautified \.membrane-lipid-field i::before,[\s\S]*\.membrane-shell\.is-beautified \.membrane-lipid-field i::after\s*\{[^}]*radial-gradient\([^}]*linear-gradient\([^}]*linear-gradient\(/s,
+  );
 });
 
 test("beautified ions have no filled pedestal or decorative sprite", async () => {
