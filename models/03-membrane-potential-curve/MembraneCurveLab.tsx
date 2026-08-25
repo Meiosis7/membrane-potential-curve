@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { CurveCanvas } from "./CurveCanvas";
 import { MembraneView } from "./MembraneView";
 import { StageExplanation } from "./StageExplanation";
-import { advancePlayback, getStagePlaybackEnd } from "./playback";
+import { advancePlayback, getFullPlaybackAriaLabel, getStagePlaybackEnd } from "./playback";
 import { getCurveSnapshot } from "./simulation";
 import { formatMembranePotential } from "./voltage-format";
 import type { PlaybackSpeed } from "./playback";
@@ -45,6 +45,7 @@ export interface MembraneCurveLabProps {
 }
 
 export function MembraneCurveLab({ visualVariant = "original" }: MembraneCurveLabProps) {
+  const isBeautified = visualVariant === "beautified";
   const [intensity, setIntensity] = useState<CurveIntensity>("threshold");
   const [time, setTime] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -125,11 +126,33 @@ export function MembraneCurveLab({ visualVariant = "original" }: MembraneCurveLa
   };
 
   const playLabel = playing ? "暂停" : hasStarted ? "继续" : "开始";
+  const curvePanel = (
+    <CurveCanvas
+      time={time}
+      intensity={intensity}
+      snapshot={snapshot}
+      compare={compare}
+      visualVariant={visualVariant}
+      onTimeChange={changeTime}
+    />
+  );
+  const membranePanel = (
+    <MembraneView
+      snapshot={snapshot}
+      playing={playing}
+      time={time}
+      intensity={intensity}
+    />
+  );
+  const stagePanel = (
+    <StageExplanation stage={snapshot.stage} onPlayRange={playStageRange} />
+  );
 
   return (
     <main
-      className={visualVariant === "beautified" ? "membrane-shell is-beautified" : "membrane-shell"}
+      className={isBeautified ? "membrane-shell is-beautified" : "membrane-shell"}
       data-layout="single-viewport"
+      data-visual-layout={isBeautified ? "mechanism-workbench" : "classic"}
       aria-labelledby="membrane-title"
     >
       <header className="membrane-header">
@@ -146,35 +169,51 @@ export function MembraneCurveLab({ visualVariant = "original" }: MembraneCurveLa
             </div>
           </div>
         </div>
-        <div className="membrane-status-line" aria-live="polite">
+        <div
+          className="membrane-status-line"
+          aria-live={isBeautified ? undefined : "polite"}
+        >
           <strong aria-label="当前阶段">{STAGE_LABEL[snapshot.stage]}</strong>
           <span aria-label="当前膜电位" className="membrane-voltage">
             {formatMembranePotential(snapshot.mv)}
           </span>
           <span aria-label="主要离子运动">{ION_LABEL[snapshot.ionFlow]}</span>
         </div>
+        {isBeautified && (
+          <button
+            type="button"
+            className="membrane-header-play"
+            aria-label={getFullPlaybackAriaLabel(playing, hasStarted)}
+            onClick={togglePlayback}
+          >
+            <span aria-hidden="true">{playing ? "Ⅱ" : "▶"}</span>
+            {playLabel}
+          </button>
+        )}
       </header>
 
-      <section className="membrane-process-canvas">
-        <CurveCanvas
-          time={time}
-          intensity={intensity}
-          snapshot={snapshot}
-          compare={compare}
-          visualVariant={visualVariant}
-          onTimeChange={changeTime}
-        />
-        <MembraneView
-          snapshot={snapshot}
-          playing={playing}
-          time={time}
-          intensity={intensity}
-        />
-      </section>
+      {isBeautified ? (
+        <section className="membrane-lab-workspace" aria-label="膜电位同步实验台">
+          <section className="membrane-process-canvas">
+            {curvePanel}
+            {membranePanel}
+          </section>
+          {stagePanel}
+        </section>
+      ) : (
+        <>
+          <section className="membrane-process-canvas">
+            {curvePanel}
+            {membranePanel}
+          </section>
+          {stagePanel}
+        </>
+      )}
 
-      <StageExplanation stage={snapshot.stage} onPlayRange={playStageRange} />
-
-      <section className="membrane-controls" aria-label="实验控制台">
+      <section
+        className={isBeautified ? "membrane-controls membrane-control-dock" : "membrane-controls"}
+        aria-label="实验控制台"
+      >
         <fieldset className="membrane-intensity-control">
           <legend>刺激强度</legend>
           <div>

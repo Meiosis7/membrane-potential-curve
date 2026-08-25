@@ -6,6 +6,7 @@ import {
   getStagePlaybackEnd,
   SECONDS_PER_TIME_UNIT,
 } from "../models/03-membrane-potential-curve/playback.ts";
+import * as playback from "../models/03-membrane-potential-curve/playback.ts";
 import { ACTION_POTENTIAL_STEPS } from "../models/03-membrane-potential-curve/stage-content.ts";
 
 test("1x playback uses a readable teaching pace", () => {
@@ -39,4 +40,12 @@ test("stage ranges are continuous and cover the full action potential", () => {
       ["recovery", 5.3, 6],
     ],
   );
+});
+
+test("full playback control distinguishes initial play, resume, and pause labels", () => {
+  const labeler = playback.getFullPlaybackAriaLabel;
+  assert.equal(typeof labeler, "function");
+  assert.equal(labeler(false, false), "播放全流程");
+  assert.equal(labeler(false, true), "继续全流程");
+  assert.equal(labeler(true, true), "暂停全流程");
 });

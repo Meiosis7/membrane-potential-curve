@@ -7,8 +7,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "lint": "eslint . --ignore-pattern .next --ignore-pattern out",
-    "test": "node --test --experimental-strip-types tests/*.test.mjs"
+    "lint": "eslint . --ignore-pattern .next --ignore-pattern out --ignore-pattern .worktrees",
+    "test": "node --test --experimental-strip-types tests/*.test.mjs",
+    "test:browser": "node --test tests/browser-regression.browser.mjs"
   },
   "dependencies": { "next": "16.2.6", "react": "19.2.6", "react-dom": "19.2.6" },
   "devDependencies": {

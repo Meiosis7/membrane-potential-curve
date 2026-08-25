@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { getCurveLayout } from "./curve-layout";
 import { getCurveSnapshot } from "./simulation";
 import type { CurveIntensity, CurveSnapshot } from "./types";
 import { getCurveVisualTheme, type VisualVariant } from "./visual-theme";
@@ -8,7 +9,6 @@ import { formatMembranePotential } from "./voltage-format";
 
 const DURATION = 6;
 const FULL_CURVE_SEGMENTS = 240;
-const PADDING = { top: 42, right: 22, bottom: 42, left: 62 };
 
 export interface CurveCanvasProps {
   time: number;
@@ -80,6 +80,8 @@ export function CurveCanvas({
     const draw = () => {
       const width = canvas.clientWidth || 720;
       const height = canvas.clientHeight || 390;
+      const layout = getCurveLayout(height, visualVariant);
+      const { padding } = layout;
       const dpr = window.devicePixelRatio || 1;
       canvas.width = width * dpr;
       canvas.height = height * dpr;
@@ -88,12 +90,12 @@ export function CurveCanvas({
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
       context.clearRect(0, 0, width, height);
 
-      const plotWidth = width - PADDING.left - PADDING.right;
-      const plotHeight = height - PADDING.top - PADDING.bottom;
-      const x = (value: number) => PADDING.left + (value / DURATION) * plotWidth;
-      const y = (mv: number) => PADDING.top + ((35 - mv) / 125) * plotHeight;
+      const plotWidth = width - padding.left - padding.right;
+      const plotHeight = layout.plotHeight;
+      const x = (value: number) => padding.left + (value / DURATION) * plotWidth;
+      const y = (mv: number) => padding.top + ((35 - mv) / 125) * plotHeight;
 
-      const gradient = context.createLinearGradient?.(0, PADDING.top, 0, height - PADDING.bottom);
+      const gradient = context.createLinearGradient?.(0, padding.top, 0, height - padding.bottom);
       if (gradient) {
         gradient.addColorStop(0, theme.surfaceTop);
         gradient.addColorStop(1, theme.surfaceBottom);
@@ -101,16 +103,16 @@ export function CurveCanvas({
       } else {
         context.fillStyle = theme.surfaceFallback;
       }
-      context.fillRect(PADDING.left, PADDING.top, plotWidth, plotHeight);
+      context.fillRect(padding.left, padding.top, plotWidth, plotHeight);
 
-      context.font = '12px Inter, "PingFang SC", sans-serif';
+      context.font = `${layout.tickFontSize}px Inter, "PingFang SC", sans-serif`;
       [-70, -55, 0, 30].forEach((mv) => {
         context.beginPath();
         context.strokeStyle = mv === -55 ? theme.threshold : theme.grid;
         context.lineWidth = 1;
         context.setLineDash?.(mv === -55 ? [...theme.thresholdDash] : []);
-        context.moveTo(PADDING.left, y(mv));
-        context.lineTo(width - PADDING.right, y(mv));
+        context.moveTo(padding.left, y(mv));
+        context.lineTo(width - padding.right, y(mv));
         context.stroke();
         context.setLineDash?.([]);
         context.fillStyle = mv === -55 ? theme.thresholdLabel : theme.gridLabel;
@@ -119,7 +121,7 @@ export function CurveCanvas({
 
       const [start, end] = stageInterval(time, intensity, snapshot.stage);
       context.fillStyle = theme.stageBand;
-      context.fillRect(x(start), PADDING.top, Math.max(2, x(end) - x(start)), plotHeight);
+      context.fillRect(x(start), padding.top, Math.max(2, x(end) - x(start)), plotHeight);
 
       const intensities: CurveIntensity[] = compare ? ["weak", "threshold", "strong"] : [intensity];
       intensities.forEach((curveIntensity) => {
@@ -148,23 +150,23 @@ export function CurveCanvas({
       context.beginPath();
       context.strokeStyle = theme.cursor;
       context.lineWidth = 1;
-      context.moveTo(x(time), PADDING.top);
-      context.lineTo(x(time), height - PADDING.bottom);
+      context.moveTo(x(time), padding.top);
+      context.lineTo(x(time), height - padding.bottom);
       context.stroke();
       context.beginPath();
       context.fillStyle = theme.intensities[intensity].color;
-      context.arc?.(x(time), y(snapshot.mv), 7, 0, Math.PI * 2);
+      context.arc?.(x(time), y(snapshot.mv), layout.pointRadius, 0, Math.PI * 2);
       context.fill?.();
 
       context.fillStyle = theme.label;
-      context.font = '700 12px Inter, "PingFang SC", sans-serif';
-      context.fillText(stageLabel(snapshot.stage), Math.min(x(time) + 10, width - 88), PADDING.top + 18);
-      context.font = '11px Inter, "PingFang SC", sans-serif';
+      context.font = `700 ${layout.stageFontSize}px Inter, "PingFang SC", sans-serif`;
+      context.fillText(stageLabel(snapshot.stage), Math.min(x(time) + 10, width - 88), padding.top + 18);
+      context.font = `${layout.axisFontSize}px Inter, "PingFang SC", sans-serif`;
       context.fillStyle = theme.axisLabel;
       for (let tick = 0; tick <= DURATION; tick += 1) {
         context.fillText(String(tick), x(tick) - 3, height - 17);
       }
-      context.fillText("mV", 20, PADDING.top - 12);
+      context.fillText("mV", 20, padding.top - 12);
       context.fillText("时间", width - 48, height - 17);
     };
 
@@ -179,9 +181,11 @@ export function CurveCanvas({
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
-    const width = rect.width || canvas.clientWidth || 720;
-    const plotWidth = width - PADDING.left - PADDING.right;
-    const relativeX = clientX - rect.left - PADDING.left;
+    const width = canvas.clientWidth || rect.width || 720;
+    const height = canvas.clientHeight || rect.height || 390;
+    const { padding } = getCurveLayout(height, visualVariant);
+    const plotWidth = width - padding.left - padding.right;
+    const relativeX = clientX - rect.left - canvas.clientLeft - padding.left;
     onTimeChange((Math.min(plotWidth, Math.max(0, relativeX)) / plotWidth) * DURATION);
   };
 

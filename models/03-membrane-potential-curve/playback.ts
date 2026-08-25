@@ -3,6 +3,11 @@ const STAGE_END_EPSILON = 0.001;
 
 export type PlaybackSpeed = 0.5 | 1 | 2;
 
+export function getFullPlaybackAriaLabel(playing: boolean, hasStarted: boolean) {
+  if (playing) return "暂停全流程";
+  return hasStarted ? "继续全流程" : "播放全流程";
+}
+
 export function advancePlayback(
   current: number,
   elapsedMs: number,

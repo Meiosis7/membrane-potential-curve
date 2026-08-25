@@ -27,6 +27,7 @@ jobs:
       - name: Prefix public texture paths for GitHub Pages
         run: sed -i 's|url("/synapse-cinematic|url("/membrane-potential-curve/synapse-cinematic|g' models/03-membrane-potential-curve/membrane-curve.css
       - run: npm run build
+      - run: npm run test:browser
       - run: touch out/.nojekyll
       - uses: actions/configure-pages@v5
         with:

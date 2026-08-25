@@ -41,9 +41,9 @@ export function StageExplanation({ stage, onPlayRange }: StageExplanationProps) 
           <p>{detail.summary}</p>
         </header>
         <div>
-          <p><b>电位变化</b>{detail.voltage}</p>
-          <p><b>通道与离子</b>{detail.transport}</p>
-          <p><b>阶段结果</b>{detail.result}</p>
+          <p className="membrane-stage-voltage"><b>电位变化</b>{detail.voltage}</p>
+          <p className="membrane-stage-transport"><b>通道与离子</b>{detail.transport}</p>
+          <p className="membrane-stage-result"><b>阶段结果</b>{detail.result}</p>
         </div>
       </article>
     </section>
