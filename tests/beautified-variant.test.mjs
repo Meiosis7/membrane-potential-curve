@@ -108,6 +108,20 @@ test("beautified membrane and controls expose the required visual states", async
   assert.match(css, /is-beautified \.membrane-transport \.membrane-play/);
 });
 
+test("beautified membrane draws two opposed phospholipid leaflets", async () => {
+  const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
+  assert.match(css, /\.membrane-shell\.is-beautified \.membrane-bilayer\s*\{[^}]*background:\s*rgba\(255, 255, 255, \.34\)/s);
+  assert.match(css, /\.membrane-shell\.is-beautified \.membrane-lipid-field i\s*\{[^}]*radial-gradient\([^}]*radial-gradient\(/s);
+  assert.match(css, /\.membrane-shell\.is-beautified \.membrane-lipid-field i::before,[\s\S]*\.membrane-shell\.is-beautified \.membrane-lipid-field i::after\s*\{/s);
+});
+
+test("beautified ions have no filled pedestal or decorative sprite", async () => {
+  const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
+  assert.match(css, /\.membrane-shell\.is-beautified \.membrane-particle\s*\{[^}]*background:\s*transparent[^}]*box-shadow:\s*none/s);
+  assert.match(css, /\.membrane-shell\.is-beautified \.membrane-particle::before,[\s\S]*\.membrane-shell\.is-beautified \.membrane-particle::after\s*\{[^}]*display:\s*none/s);
+  assert.match(css, /\.membrane-shell\.is-beautified \.membrane-particle\.potassium\s*\{[^}]*background:\s*transparent/s);
+});
+
 test("beautified desktop stage sizing stays intrinsic", async () => {
   const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
   assert.doesNotMatch(css, /\.membrane-shell\.is-beautified \.membrane-stage-guide\s*\{[^}]*\bgap:/s);
@@ -318,40 +332,28 @@ test("beautified desktop stage detail keeps body text and field labels at 12px w
   assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-stage-transport b,\s*\.membrane-shell\.is-beautified \.membrane-stage-result b\s*\{[^}]*font-size:\s*11px/s);
 });
 
-test("beautified sodium and potassium particle labels meet 4.5:1 against every gradient endpoint", async () => {
+test("beautified sodium and potassium particles retain distinct outlined labels", async () => {
   const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
-  const palettes = [
-    {
-      ion: "sodium",
-      label: cssHexToken(css, "beauty-sodium-particle-label"),
-      endpoints: [
-        cssHexToken(css, "beauty-sodium-particle-light"),
-        cssHexToken(css, "beauty-sodium-particle-dark"),
-      ],
-    },
-    {
-      ion: "potassium",
-      label: cssHexToken(css, "beauty-potassium-particle-label"),
-      endpoints: [
-        cssHexToken(css, "beauty-potassium-particle-light"),
-        cssHexToken(css, "beauty-potassium-particle-dark"),
-      ],
-    },
+  const sodium = cssHexToken(css, "beauty-sodium-particle-label");
+  const potassium = cssHexToken(css, "beauty-potassium-particle-label");
+  assert.notEqual(sodium, potassium, "sodium and potassium need distinct outline colors");
+  const backgrounds = [
+    { compartment: "outside", color: "#d9f3f4" },
+    { compartment: "inside", color: "#fae6ce" },
   ];
-
-  assert.deepEqual(palettes[0].endpoints, ["#4ccbd0", "#3fb0b7"]);
-  assert.deepEqual(palettes[1].endpoints, ["#ffc163", "#d67e18"]);
-  for (const { ion, label, endpoints } of palettes) {
-    for (const endpoint of endpoints) {
+  for (const { ion, color } of [
+    { ion: "sodium", color: sodium },
+    { ion: "potassium", color: potassium },
+  ]) {
+    for (const background of backgrounds) {
       assert.ok(
-        contrastRatio(label, endpoint) >= 4.5,
-        `${ion} label ${label} must reach 4.5:1 against ${endpoint}`,
+        contrastRatio(color, background.color) >= 4.5,
+        `${ion} outline ${color} must reach 4.5:1 against the ${background.compartment} compartment ${background.color}`,
       );
     }
   }
-
-  assert.match(css, /\.membrane-shell\.is-beautified \.membrane-particle\.sodium\s*\{[^}]*color:\s*var\(--beauty-sodium-particle-label\)[^}]*background:\s*linear-gradient\(145deg, var\(--beauty-sodium-particle-light\), var\(--beauty-sodium-particle-dark\)\)/s);
-  assert.match(css, /\.membrane-shell\.is-beautified \.membrane-particle\.potassium\s*\{[^}]*color:\s*var\(--beauty-potassium-particle-label\)[^}]*background:\s*linear-gradient\(145deg, var\(--beauty-potassium-particle-light\), var\(--beauty-potassium-particle-dark\)\)/s);
+  assert.match(css, /\.membrane-shell\.is-beautified \.membrane-particle\.sodium\s*\{[^}]*color:\s*var\(--beauty-sodium-particle-label\)[^}]*background:\s*transparent/s);
+  assert.match(css, /\.membrane-shell\.is-beautified \.membrane-particle\.potassium\s*\{[^}]*color:\s*var\(--beauty-potassium-particle-label\)[^}]*background:\s*transparent/s);
 });
 
 test("beautified live regions avoid streaming voltage updates while the original keeps its aria contract", async () => {

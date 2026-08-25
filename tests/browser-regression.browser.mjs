@@ -588,6 +588,21 @@ class BrowserFixture {
 
 let browser;
 
+function assertHalfTurnMatrix(transform, viewport) {
+  const match = transform.match(/^matrix\(([^)]+)\)$/);
+  assert.ok(match, `lower tail must expose a 2D transform matrix at ${viewport}px`);
+  const values = match[1].split(",").map((value) => Number.parseFloat(value.trim()));
+  assert.equal(values.length, 6, `lower tail matrix must contain six values at ${viewport}px`);
+  const [a, b, c, d, translateX, translateY] = values;
+  const tolerance = 0.001;
+  assert.ok(Math.abs(a + 1) <= tolerance, `lower tail a matrix value must be -1 for a 180° rotation at ${viewport}px`);
+  assert.ok(Math.abs(b) <= tolerance, `lower tail b matrix value must be 0 at ${viewport}px`);
+  assert.ok(Math.abs(c) <= tolerance, `lower tail c matrix value must be 0 at ${viewport}px`);
+  assert.ok(Math.abs(d + 1) <= tolerance, `lower tail d matrix value must be -1 for a 180° rotation at ${viewport}px`);
+  assert.ok(Math.abs(translateX) <= tolerance, `lower tail x translation must be 0 at ${viewport}px`);
+  assert.ok(Math.abs(translateY) <= tolerance, `lower tail y translation must be 0 at ${viewport}px`);
+}
+
 before(async () => {
   browser = await BrowserFixture.start();
 }, { timeout: 30_000 });
@@ -669,6 +684,98 @@ test("production routes keep the intended responsive grids without document over
   }
 
   browser.assertConsoleClean("responsive route coverage");
+});
+
+test("production beautified route renders transparent outlined ions and phospholipid leaflets", { timeout: 30_000 }, async () => {
+  const scenarios = [
+    { width: 1440, height: 900 },
+    { width: 390, height: 844 },
+  ];
+
+  for (const scenario of scenarios) {
+    await browser.navigate("/beautified/", scenario.width, scenario.height);
+    const visuals = await browser.evaluate(`(() => {
+      const sodium = document.querySelector('.membrane-particle.sodium');
+      const potassium = document.querySelector('.membrane-particle.potassium');
+      const lipid = document.querySelector('.membrane-lipid-field i');
+      const upperTail = getComputedStyle(lipid, '::before');
+      const lowerTail = getComputedStyle(lipid, '::after');
+      const lipidHeight = Number.parseFloat(getComputedStyle(lipid).height);
+      const upperTop = Number.parseFloat(upperTail.top);
+      const upperHeight = Number.parseFloat(upperTail.height);
+      const lowerHeight = Number.parseFloat(lowerTail.height);
+      const lowerStart = Number.parseFloat(lowerTail.top);
+      return {
+        sodiumBackground: getComputedStyle(sodium).backgroundColor,
+        potassiumBackground: getComputedStyle(potassium).backgroundColor,
+        spriteDisplay: getComputedStyle(potassium, '::before').display,
+        headBackgrounds: getComputedStyle(lipid).backgroundImage,
+        upperTail: {
+          content: upperTail.content,
+        },
+        lowerTail: {
+          content: lowerTail.content,
+          transform: lowerTail.transform,
+        },
+        geometry: {
+          upperStart: upperTop,
+          upperEnd: upperTop + upperHeight,
+          lowerStart,
+          lowerEnd: lowerStart + lowerHeight,
+          lipidHeight,
+        },
+      };
+    })()`);
+
+    assert.equal(visuals.sodiumBackground, "rgba(0, 0, 0, 0)");
+    assert.equal(visuals.potassiumBackground, "rgba(0, 0, 0, 0)");
+    assert.equal(visuals.spriteDisplay, "none");
+    assert.match(visuals.headBackgrounds, /radial-gradient/);
+    assert.deepEqual(visuals.upperTail, {
+      content: '\"\"',
+    });
+    assert.equal(visuals.lowerTail.content, '\"\"');
+    assertHalfTurnMatrix(visuals.lowerTail.transform, scenario.width);
+    assert.ok(visuals.geometry.upperStart > 0, `upper tail must stay below the outer head at ${scenario.width}px`);
+    assert.ok(visuals.geometry.lowerEnd < visuals.geometry.lipidHeight, `lower tail must stay above the inner head at ${scenario.width}px`);
+    assert.ok(visuals.geometry.upperStart < visuals.geometry.lowerStart, `opposed tails must face one another at ${scenario.width}px`);
+    assert.ok(visuals.geometry.lowerStart < visuals.geometry.upperEnd, `opposed tails must intersect near the membrane center at ${scenario.width}px`);
+    assert.ok(visuals.geometry.lowerStart <= visuals.geometry.lipidHeight / 2, `lower tail must reach the membrane center at ${scenario.width}px`);
+    assert.ok(visuals.geometry.upperEnd >= visuals.geometry.lipidHeight / 2, `upper tail must reach the membrane center at ${scenario.width}px`);
+  }
+
+  browser.assertConsoleClean("beautified phospholipid and ion coverage");
+});
+
+test("production crossing ions keep the outlined presentation after entering the scene", { timeout: 30_000 }, async () => {
+  await browser.navigate("/beautified/", 1440, 900);
+  const inspectCrossing = async (stageIndex, ion) => {
+    const selector = `.membrane-ion-stream.${ion} .membrane-crossing-ion`;
+    await browser.click(".membrane-stage-nav button", stageIndex);
+    await browser.waitFor(
+      `(() => {
+        const crossing = document.querySelector(${JSON.stringify(selector)});
+        return crossing && document.querySelector('.membrane-scene').classList.contains('is-playing');
+      })()`,
+      `${ion} crossing ion did not appear for presentation checks`,
+    );
+    const visuals = await browser.evaluate(`(() => {
+      const crossing = document.querySelector(${JSON.stringify(selector)});
+      return {
+        background: getComputedStyle(crossing).backgroundColor,
+        boxShadow: getComputedStyle(crossing).boxShadow,
+        before: getComputedStyle(crossing, '::before').display,
+        after: getComputedStyle(crossing, '::after').display,
+      };
+    })()`);
+    assert.equal(visuals.background, "rgba(0, 0, 0, 0)", `${ion} crossing ion must stay transparent`);
+    assert.equal(visuals.boxShadow, "none", `${ion} crossing ion must not regain a pedestal shadow`);
+    assert.equal(visuals.before, "none", `${ion} crossing ion sprite must stay hidden`);
+    assert.equal(visuals.after, "none", `${ion} crossing ion highlight must stay hidden`);
+  };
+
+  await inspectCrossing(2, "sodium");
+  await inspectCrossing(4, "potassium");
 });
 
 test("playback, all stage buttons, and crossing ions update through real clicks", { timeout: 60_000 }, async () => {
