@@ -821,6 +821,7 @@ test("playback, all stage buttons, and crossing ions update through real clicks"
 
   const stageStarts = [0, 1, 2, 2.65, 3, 4.8, 5.3];
   const displayedStageEnds = [1, 2, 2.6, 3, 4.8, 5.3, 6];
+  const loopingStageIndexes = new Set([2, 3]);
   for (let index = 0; index < stageStarts.length; index += 1) {
     await browser.click(".membrane-stage-nav button", index);
     const firstFrame = await browser.waitFor(
@@ -836,12 +837,52 @@ test("playback, all stage buttons, and crossing ions update through real clicks"
       `Number(document.querySelector(${JSON.stringify(slider)}).getAttribute('aria-valuenow')) > ${firstFrame + 0.02}`,
       `stage button ${index + 1} did not animate the synchronized curve`,
     );
+    if (loopingStageIndexes.has(index)) {
+      const span = displayedStageEnds[index] - stageStarts[index];
+      await browser.waitFor(
+        `Number(document.querySelector(${JSON.stringify(slider)}).getAttribute('aria-valuenow')) > ${stageStarts[index] + span * 0.7}`,
+        `stage button ${index + 1} did not approach its first loop boundary`,
+        8_000,
+      );
+      await browser.waitFor(
+        `(() => {
+          const time = Number(document.querySelector(${JSON.stringify(slider)}).getAttribute('aria-valuenow'));
+          const button = document.querySelectorAll('.membrane-stage-nav button')[${index}];
+          return time < ${stageStarts[index] + span * 0.3}
+            && button.getAttribute('aria-pressed') === 'true'
+            && document.querySelector('.membrane-scene').classList.contains('is-playing');
+        })()`,
+        `stage button ${index + 1} did not wrap and keep its animation running`,
+        8_000,
+      );
+      await browser.click(play);
+      await browser.waitFor(
+        `document.querySelector('.membrane-scene').classList.contains('is-paused')`,
+        `stage button ${index + 1} loop did not respond to pause`,
+      );
+      continue;
+    }
     await browser.waitFor(
       `document.querySelector('.membrane-scene').classList.contains('is-paused') && Number(document.querySelector(${JSON.stringify(slider)}).getAttribute('aria-valuenow')) === ${displayedStageEnds[index]}`,
       `stage button ${index + 1} did not stop automatically at its displayed boundary ${displayedStageEnds[index]}`,
       8_000,
     );
   }
+
+  await browser.click(".membrane-reset");
+  await browser.click('[aria-label="2 倍速"]');
+  await browser.click(play);
+  await browser.waitFor(
+    `document.querySelector('[aria-label="当前阶段"]').textContent === '复极化'
+      && document.querySelector('.membrane-scene').classList.contains('is-playing')`,
+    "full playback looped at reversal polarization instead of advancing to repolarization",
+    10_000,
+  );
+  await browser.click(play);
+  await browser.waitFor(
+    `document.querySelector('.membrane-scene').classList.contains('is-paused')`,
+    "full playback did not pause after passing the looping stage ranges",
+  );
 
   const assertCrossingMoves = async (stageIndex, ion, channelSelector) => {
     await browser.click(".membrane-stage-nav button", stageIndex);
@@ -1029,9 +1070,15 @@ test("original bounded playback and beautified mobile interactions remain operab
   await browser.click(".membrane-stage-nav button", 2);
   await browser.waitFor(
     `document.querySelectorAll('.membrane-stage-nav button')[2].getAttribute('aria-pressed') === 'true'
-      && document.querySelector('.membrane-scene').classList.contains('is-paused')
-      && Number(document.querySelector(${JSON.stringify(slider)}).getAttribute('aria-valuenow')) === 2.6`,
-    "beautified mobile stage navigation did not complete its bounded animation",
+      && document.querySelector('.membrane-scene').classList.contains('is-playing')
+      && Number(document.querySelector(${JSON.stringify(slider)}).getAttribute('aria-valuenow')) > 2.5`,
+    "beautified mobile depolarization stage did not approach its loop boundary",
+  );
+  await browser.waitFor(
+    `document.querySelectorAll('.membrane-stage-nav button')[2].getAttribute('aria-pressed') === 'true'
+      && document.querySelector('.membrane-scene').classList.contains('is-playing')
+      && Number(document.querySelector(${JSON.stringify(slider)}).getAttribute('aria-valuenow')) < 2.15`,
+    "beautified mobile depolarization stage did not wrap and continue playing",
   );
   await browser.dragCanvas(2.65);
   await browser.waitFor(

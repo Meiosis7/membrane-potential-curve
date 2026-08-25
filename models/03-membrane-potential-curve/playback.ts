@@ -18,6 +18,21 @@ export function advancePlayback(
   return Math.min(stopAt, current + elapsedTimeUnits);
 }
 
+export function advanceLoopingPlayback(
+  current: number,
+  elapsedMs: number,
+  speed: PlaybackSpeed,
+  loopStart: number,
+  loopEnd: number,
+) {
+  const loopDuration = loopEnd - loopStart;
+  if (loopDuration <= 0) return loopStart;
+  const currentInRange = current >= loopStart && current < loopEnd ? current : loopStart;
+  const elapsedTimeUnits = (elapsedMs / 1000) * (speed / SECONDS_PER_TIME_UNIT);
+  const nextOffset = (currentInRange - loopStart + elapsedTimeUnits) % loopDuration;
+  return loopStart + nextOffset;
+}
+
 export function getStagePlaybackEnd(endTime: number) {
   return Math.max(0, endTime - STAGE_END_EPSILON);
 }

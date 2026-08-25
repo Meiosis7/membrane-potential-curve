@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { CurveCanvas } from "./CurveCanvas";
 import { MembraneView } from "./MembraneView";
 import { StageExplanation } from "./StageExplanation";
-import { advancePlayback, getFullPlaybackAriaLabel, getStagePlaybackEnd } from "./playback";
+import { advanceLoopingPlayback, advancePlayback, getFullPlaybackAriaLabel, getStagePlaybackEnd } from "./playback";
 import { getCurveSnapshot } from "./simulation";
 import { formatMembranePotential } from "./voltage-format";
 import type { PlaybackSpeed } from "./playback";
@@ -12,6 +12,7 @@ import type { CurveIntensity, CurveStage } from "./types";
 import type { VisualVariant } from "./visual-theme";
 
 const DURATION = 6;
+const LOOPING_STAGE_STARTS = new Set([2, 2.65]);
 
 const STAGE_LABEL: Record<CurveStage, string> = {
   resting: "静息状态",
@@ -54,6 +55,7 @@ export function MembraneCurveLab({ visualVariant = "original" }: MembraneCurveLa
   const [compare, setCompare] = useState(false);
   const lastFrame = useRef<number | null>(null);
   const playUntil = useRef(DURATION);
+  const loopStart = useRef<number | null>(null);
   const snapshot = useMemo(() => getCurveSnapshot(time, intensity), [intensity, time]);
 
   useEffect(() => {
@@ -63,6 +65,9 @@ export function MembraneCurveLab({ visualVariant = "original" }: MembraneCurveLa
       const previous = lastFrame.current ?? now;
       lastFrame.current = now;
       setTime((current) => {
+        if (loopStart.current !== null) {
+          return advanceLoopingPlayback(current, now - previous, speed, loopStart.current, playUntil.current);
+        }
         const next = advancePlayback(current, now - previous, speed, playUntil.current);
         if (next >= playUntil.current) setPlaying(false);
         return next;
@@ -77,6 +82,7 @@ export function MembraneCurveLab({ visualVariant = "original" }: MembraneCurveLa
   }, [playing, speed]);
 
   const changeTime = (nextTime: number) => {
+    loopStart.current = null;
     playUntil.current = DURATION;
     lastFrame.current = null;
     setPlaying(false);
@@ -85,6 +91,7 @@ export function MembraneCurveLab({ visualVariant = "original" }: MembraneCurveLa
   };
 
   const selectIntensity = (nextIntensity: CurveIntensity) => {
+    loopStart.current = null;
     playUntil.current = DURATION;
     lastFrame.current = null;
     setIntensity(nextIntensity);
@@ -98,7 +105,7 @@ export function MembraneCurveLab({ visualVariant = "original" }: MembraneCurveLa
       setPlaying(false);
       return;
     }
-    playUntil.current = DURATION;
+    if (loopStart.current === null) playUntil.current = DURATION;
     lastFrame.current = null;
     if (!hasStarted || time >= DURATION) setTime(0);
     setHasStarted(true);
@@ -106,6 +113,7 @@ export function MembraneCurveLab({ visualVariant = "original" }: MembraneCurveLa
   };
 
   const reset = () => {
+    loopStart.current = null;
     playUntil.current = DURATION;
     lastFrame.current = null;
     setPlaying(false);
@@ -118,6 +126,7 @@ export function MembraneCurveLab({ visualVariant = "original" }: MembraneCurveLa
 
   const playStageRange = (startTime: number, endTime: number) => {
     if (intensity === "weak") setIntensity("threshold");
+    loopStart.current = isBeautified && LOOPING_STAGE_STARTS.has(startTime) ? clamp(startTime) : null;
     playUntil.current = clamp(getStagePlaybackEnd(endTime));
     lastFrame.current = null;
     setTime(clamp(startTime));

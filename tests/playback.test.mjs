@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   advancePlayback,
+  advanceLoopingPlayback,
   getStagePlaybackEnd,
   SECONDS_PER_TIME_UNIT,
 } from "../models/03-membrane-potential-curve/playback.ts";
@@ -18,6 +19,13 @@ test("1x playback uses a readable teaching pace", () => {
 test("playback stops exactly at the selected stage boundary", () => {
   assert.equal(advancePlayback(2.9, 1_000, 1, 3), 3);
   assert.equal(advancePlayback(3, 1_000, 2, 3), 3);
+});
+
+test("looping playback wraps inside the selected sodium stage", () => {
+  assert.equal(advanceLoopingPlayback(2.1, 240, 1, 2, 2.649), 2.2);
+  const wrapped = advanceLoopingPlayback(2.6, 240, 1, 2, 2.649);
+  assert.ok(wrapped >= 2 && wrapped < 2.649);
+  assert.ok(Math.abs(wrapped - 2.051) < 0.000_001);
 });
 
 test("stage endpoint stays inside the selected stage while displaying the boundary", () => {
