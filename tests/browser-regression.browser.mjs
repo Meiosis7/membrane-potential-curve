@@ -619,7 +619,11 @@ test("production routes keep the intended responsive grids without document over
     { route: "/beautified/", width: 927, height: 900, layout: "mechanism-workbench", areas: '"stages stages" "membrane curve" "membrane detail"', visibleRegions: true },
     { route: "/beautified/", width: 928, height: 900, layout: "mechanism-workbench", areas: '"stages membrane curve" "stages membrane detail"', visibleRegions: true },
     { route: "/beautified/", width: 1440, height: 900, layout: "mechanism-workbench", areas: '"stages membrane curve" "stages membrane detail"', visibleRegions: true },
-    { route: "/beautified/", width: 390, height: 844, layout: "mechanism-workbench", areas: '"curve" "membrane" "stages" "detail"', visibleRegions: true },
+    { route: "/beautified/", width: 320, height: 568, layout: "mechanism-workbench", areas: '"curve" "membrane" "stages" "detail"', visibleRegions: true, mobileHeader: true },
+    { route: "/beautified/", width: 360, height: 640, layout: "mechanism-workbench", areas: '"curve" "membrane" "stages" "detail"', visibleRegions: true, mobileHeader: true },
+    { route: "/beautified/", width: 375, height: 667, layout: "mechanism-workbench", areas: '"curve" "membrane" "stages" "detail"', visibleRegions: true, mobileHeader: true },
+    { route: "/beautified/", width: 390, height: 844, layout: "mechanism-workbench", areas: '"curve" "membrane" "stages" "detail"', visibleRegions: true, mobileHeader: true },
+    { route: "/beautified/", width: 412, height: 915, layout: "mechanism-workbench", areas: '"curve" "membrane" "stages" "detail"', visibleRegions: true, mobileHeader: true },
   ];
 
   for (const scenario of scenarios) {
@@ -628,6 +632,10 @@ test("production routes keep the intended responsive grids without document over
       const shell = document.querySelector('.membrane-shell');
       const workspace = document.querySelector('.membrane-lab-workspace');
       const scrolling = document.scrollingElement;
+      const rectOf = (element) => {
+        const rect = element?.getBoundingClientRect();
+        return rect && { top: rect.top, left: rect.left, right: rect.right, bottom: rect.bottom, width: rect.width, height: rect.height };
+      };
       const regionSelectors = [
         '.membrane-header',
         '.membrane-curve-card',
@@ -652,9 +660,26 @@ test("production routes keep the intended responsive grids without document over
           vertical: scrolling.scrollHeight - scrolling.clientHeight,
         },
         regions: regionSelectors.map((selector) => {
-          const rect = document.querySelector(selector)?.getBoundingClientRect();
-          return rect && { selector, top: rect.top, left: rect.left, right: rect.right, bottom: rect.bottom, width: rect.width, height: rect.height };
+          const rect = rectOf(document.querySelector(selector));
+          return rect && { selector, ...rect };
         }),
+        panelOverflow: ['.membrane-stage-detail', '.membrane-control-dock'].map((selector) => {
+          const element = document.querySelector(selector);
+          return element && {
+            selector,
+            horizontal: element.scrollWidth - element.clientWidth,
+            vertical: element.scrollHeight - element.clientHeight,
+          };
+        }),
+        mobileHeader: {
+          firstLabel: document.querySelector('.membrane-series-line > span')?.textContent?.trim(),
+          secondLabel: document.querySelector('.membrane-series-line > b')?.textContent?.trim(),
+          series: rectOf(document.querySelector('.membrane-series-line')),
+          title: rectOf(document.querySelector('.membrane-title-row h1')),
+          headerStatusDisplay: getComputedStyle(document.querySelector('.membrane-status-line')).display,
+          curveState: rectOf(document.querySelector('.membrane-curve-state')),
+          curveStateDisplay: getComputedStyle(document.querySelector('.membrane-curve-state')).display,
+        },
       };
     })()`);
 
@@ -680,6 +705,28 @@ test("production routes keep the intended responsive grids without document over
         assert.ok(region.left >= -1 && region.right <= scenario.width + 1, `${region.selector} leaves the mobile viewport horizontally`);
         assert.ok(region.top >= -1 && region.bottom <= scenario.height + 1, `${region.selector} leaves the mobile viewport vertically`);
       }
+    }
+    if (scenario.mobileHeader) {
+      for (let index = 0; index < result.regions.length - 1; index += 1) {
+        assert.ok(
+          result.regions[index].bottom <= result.regions[index + 1].top + 1,
+          `${result.regions[index].selector} overlaps ${result.regions[index + 1].selector} at ${scenario.width}x${scenario.height}`,
+        );
+      }
+      for (const panel of result.panelOverflow) {
+        assert.ok(panel, `required compact panel is missing at ${scenario.width}x${scenario.height}`);
+        assert.ok(panel.horizontal <= 1, `${panel.selector} clips horizontally by ${panel.horizontal}px at ${scenario.width}x${scenario.height}`);
+        assert.ok(panel.vertical <= 1, `${panel.selector} clips vertically by ${panel.vertical}px at ${scenario.width}x${scenario.height}`);
+      }
+      assert.equal(result.mobileHeader.firstLabel, "选择性必修1·神经冲动的传导");
+      assert.equal(result.mobileHeader.secondLabel, "一生儿高中生物一本通");
+      assert.ok(result.mobileHeader.series?.height > 0, `course labels must remain visible at ${scenario.width}x${scenario.height}`);
+      assert.ok(result.mobileHeader.title?.height > 0, `center title must remain visible at ${scenario.width}x${scenario.height}`);
+      const titleCenter = result.mobileHeader.title.left + result.mobileHeader.title.width / 2;
+      assert.ok(Math.abs(titleCenter - scenario.width / 2) <= 2, `title is not centered at ${scenario.width}x${scenario.height}`);
+      assert.equal(result.mobileHeader.headerStatusDisplay, "none", `header status must move below at ${scenario.width}x${scenario.height}`);
+      assert.notEqual(result.mobileHeader.curveStateDisplay, "none", `curve status must be visible at ${scenario.width}x${scenario.height}`);
+      assert.ok(result.mobileHeader.curveState?.height > 0, `curve status has no visible box at ${scenario.width}x${scenario.height}`);
     }
   }
 

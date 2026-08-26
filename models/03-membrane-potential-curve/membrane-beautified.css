@@ -227,6 +227,16 @@
   text-shadow: 0 6px 18px rgba(241, 95, 80, .13);
 }
 
+.membrane-shell.is-beautified .membrane-curve-state {
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+}
+
+.membrane-shell.is-beautified .membrane-curve-stage {
+  display: none;
+}
+
 .membrane-shell.is-beautified .membrane-view-card > header strong {
   color: var(--beauty-sodium-ink);
   font-weight: 850;
@@ -863,39 +873,59 @@
 
 @media (max-width: 800px) {
   .membrane-shell.is-beautified {
-    grid-template-rows: 54px minmax(0, 1fr) 82px;
-    gap: 6px;
-    padding: 6px;
+    grid-template-rows: clamp(48px, 9svh, 56px) minmax(0, 1fr) clamp(64px, 10svh, 82px);
+    gap: 4px;
+    padding-top: max(4px, env(safe-area-inset-top));
+    padding-right: max(4px, env(safe-area-inset-right));
+    padding-bottom: max(4px, env(safe-area-inset-bottom));
+    padding-left: max(4px, env(safe-area-inset-left));
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   .membrane-shell.is-beautified .membrane-header {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 6px;
+    grid-template-columns: 1fr;
+    gap: 0;
     height: 100%;
     box-sizing: border-box;
-    max-height: 54px;
     min-height: 0;
     overflow: hidden;
-    padding: 6px 9px;
+    padding: 3px 7px 4px;
     border-radius: 12px;
   }
 
   .membrane-shell.is-beautified .membrane-brand {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 1px;
     min-width: 0;
     min-height: 0;
     overflow: hidden;
   }
 
   .membrane-shell.is-beautified .membrane-series-line {
-    display: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 5px;
+    font-size: 7px;
+    line-height: 1.1;
+    letter-spacing: .01em;
+    white-space: nowrap;
+  }
+
+  .membrane-shell.is-beautified .membrane-series-line b {
+    overflow: hidden;
+    text-align: right;
+    text-overflow: ellipsis;
   }
 
   .membrane-shell.is-beautified .membrane-title-row {
-    justify-content: flex-start;
+    justify-content: center;
     min-width: 0;
     min-height: 0;
-    height: 40px;
     overflow: hidden;
+    text-align: center;
     white-space: nowrap;
   }
 
@@ -903,9 +933,9 @@
     min-width: 0;
     max-width: 100%;
     overflow: hidden;
-    font-size: 18px;
+    font-size: clamp(16px, 5vw, 19px);
     line-height: 1;
-    text-align: left;
+    text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
@@ -915,21 +945,6 @@
   }
 
   .membrane-shell.is-beautified .membrane-status-line {
-    grid-template-columns: max-content max-content;
-    width: auto;
-    min-height: 32px;
-    overflow: hidden;
-  }
-
-  .membrane-shell.is-beautified .membrane-status-line strong,
-  .membrane-shell.is-beautified .membrane-status-line span {
-    min-height: 32px;
-    padding-inline: 8px;
-    font-size: 11px;
-    white-space: nowrap;
-  }
-
-  .membrane-shell.is-beautified .membrane-status-line span:last-child {
     display: none;
   }
 
@@ -939,13 +954,17 @@
 
   .membrane-shell.is-beautified .membrane-lab-workspace {
     grid-template-columns: 1fr;
-    grid-template-rows: 196px minmax(282px, 1fr) 32px 94px;
+    grid-template-rows:
+      clamp(128px, 23svh, 196px)
+      minmax(0, 1fr)
+      clamp(25px, 4svh, 32px)
+      clamp(68px, 11svh, 94px);
     grid-template-areas:
       "curve"
       "membrane"
       "stages"
       "detail";
-    gap: 5px;
+    gap: 4px;
   }
 
   .membrane-shell.is-beautified .membrane-curve-card {
@@ -956,6 +975,29 @@
 
   .membrane-shell.is-beautified .membrane-curve-card figcaption small {
     display: none;
+  }
+
+  .membrane-shell.is-beautified .membrane-curve-state {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .membrane-shell.is-beautified .membrane-curve-stage {
+    display: inline-flex;
+    align-items: center;
+    min-height: 20px;
+    padding: 0 7px;
+    border: 1px solid rgba(22, 166, 173, .24);
+    border-radius: 999px;
+    color: var(--beauty-sodium-ink);
+    background: rgba(226, 245, 241, .82);
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: 0;
+    white-space: nowrap;
   }
 
   .membrane-shell.is-beautified::before {
@@ -1035,7 +1077,7 @@
   .membrane-shell.is-beautified .membrane-stage-transport,
   .membrane-shell.is-beautified .membrane-stage-result {
     display: grid;
-    grid-template-columns: 58px minmax(0, 1fr);
+    grid-template-columns: 62px minmax(0, 1fr);
     font-size: 11px;
     line-height: 1.15;
   }
@@ -1043,6 +1085,7 @@
   .membrane-shell.is-beautified .membrane-stage-transport b,
   .membrane-shell.is-beautified .membrane-stage-result b {
     font-size: 11px;
+    white-space: nowrap;
   }
 
   .membrane-shell.is-beautified .membrane-lipid-field {
@@ -1152,18 +1195,44 @@
 }
 
 @media (max-width: 800px) and (max-height: 700px) {
-  .membrane-shell.is-beautified {
-    grid-template-rows: 54px minmax(0, 1fr) 74px;
+  .membrane-shell.is-beautified .membrane-lab-workspace {
+    grid-template-rows:
+      clamp(128px, 23svh, 196px)
+      minmax(0, 1fr)
+      clamp(25px, 4svh, 32px)
+      clamp(104px, 19svh, 116px);
+    gap: 3px;
   }
 
-  .membrane-shell.is-beautified .membrane-lab-workspace {
-    grid-template-rows: 196px minmax(200px, 1fr) 28px 78px;
+  .membrane-shell.is-beautified .membrane-header {
+    padding: 2px 6px 3px;
+  }
+
+  .membrane-shell.is-beautified .membrane-curve-card {
+    grid-template-rows: 28px minmax(0, 1fr) 14px;
+    gap: 3px;
+    padding: 3px;
+  }
+
+  .membrane-shell.is-beautified .membrane-stage-detail {
+    grid-template-columns: minmax(82px, .32fr) 1fr;
+    gap: 4px;
+    padding: 4px 6px;
   }
 
   .membrane-shell.is-beautified .membrane-control-dock {
-    grid-template-rows: 36px 28px;
+    grid-template-rows: 34px 24px;
     gap: 2px 6px;
     padding: 2px 5px;
+  }
+
+  .membrane-shell.is-beautified .membrane-intensity-control button,
+  .membrane-shell.is-beautified .membrane-transport button {
+    min-height: 30px;
+  }
+
+  .membrane-shell.is-beautified .membrane-speed button {
+    min-height: 24px;
   }
 }
 

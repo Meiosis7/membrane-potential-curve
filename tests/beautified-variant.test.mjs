@@ -83,10 +83,11 @@ test("curve canvas and beautified mobile CSS share a compact layout contract", a
   assert.match(canvas, /const width = canvas\.clientWidth \|\| rect\.width \|\| 720;/);
   assert.match(canvas, /const height = canvas\.clientHeight \|\| rect\.height \|\| 390;/);
   assert.match(canvas, /clientX - rect\.left - canvas\.clientLeft - padding\.left/);
-  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-lab-workspace\s*\{[^}]*grid-template-rows:\s*196px minmax\(282px, 1fr\) 32px 94px/s);
+  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-lab-workspace\s*\{[^}]*grid-template-rows:\s*clamp\(128px, 23svh, 196px\)\s*minmax\(0, 1fr\)\s*clamp\(25px, 4svh, 32px\)\s*clamp\(68px, 11svh, 94px\)/s);
   assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-curve-card\s*\{[^}]*grid-template-rows:\s*30px minmax\(0, 1fr\) 16px[^}]*gap:\s*4px[^}]*padding:\s*4px/s);
   assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-curve-card figcaption small\s*\{[^}]*display:\s*none/s);
-  assert.match(shortMobile, /\.membrane-shell\.is-beautified \.membrane-lab-workspace\s*\{[^}]*grid-template-rows:\s*196px minmax\(200px, 1fr\) 28px 78px/s);
+  assert.doesNotMatch(shortMobile, /minmax\((?:200|282)px, 1fr\)/);
+  assert.match(shortMobile, /\.membrane-shell\.is-beautified \.membrane-lab-workspace\s*\{[^}]*gap:\s*3px/s);
 });
 
 test("beautified CSS is scoped and defines the bio-lab visual system", async () => {
@@ -245,33 +246,45 @@ test("beautified mobile uses a dedicated one-screen teaching grid", async () => 
   assert.match(css, /@media \(max-width:\s*800px\)[\s\S]*is-beautified \.membrane-control-dock \.membrane-play\s*\{[^}]*display:\s*inline-flex/s);
 });
 
-test("beautified mobile header keeps a readable compact status bar inside its grid row", async () => {
+test("beautified mobile header keeps the fixed course labels and moves status to the curve", async () => {
+  const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
+  const canvas = await source("models/03-membrane-potential-curve/CurveCanvas.tsx");
+  const mobile = cssMediaRules(css, "max-width: 800px");
+
+  assert.match(canvas, /className="membrane-curve-state" aria-label="当前膜电位状态"/);
+  assert.match(canvas, /className="membrane-curve-stage"/);
+  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-header\s*\{[^}]*grid-template-columns:\s*1fr[^}]*height:\s*100%[^}]*box-sizing:\s*border-box[^}]*min-height:\s*0[^}]*overflow:\s*hidden/s);
+  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-brand\s*\{[^}]*min-width:\s*0[^}]*min-height:\s*0[^}]*overflow:\s*hidden/s);
+  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-series-line\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:\s*minmax\(0, 1fr\) minmax\(0, 1fr\)/s);
+  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-series-line b\s*\{[^}]*text-align:\s*right/s);
+  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-title-row\s*\{[^}]*justify-content:\s*center[^}]*text-align:\s*center/s);
+  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-header h1\s*\{[^}]*font-size:\s*clamp\(16px, 5vw, 19px\)[^}]*text-align:\s*center[^}]*white-space:\s*nowrap/s);
+  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-live-state\s*\{[^}]*display:\s*none/s);
+  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-status-line\s*\{[^}]*display:\s*none/s);
+  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-curve-state\s*\{[^}]*display:\s*flex/s);
+  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-curve-stage\s*\{[^}]*display:\s*inline-flex/s);
+});
+
+test("beautified mobile shell uses viewport-aware rows and safe-area padding", async () => {
   const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
   const mobile = cssMediaRules(css, "max-width: 800px");
 
-  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-header\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\) auto[^}]*height:\s*100%[^}]*box-sizing:\s*border-box[^}]*max-height:\s*54px[^}]*min-height:\s*0[^}]*overflow:\s*hidden/s);
-  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-brand\s*\{[^}]*min-width:\s*0[^}]*min-height:\s*0[^}]*overflow:\s*hidden/s);
-  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-series-line\s*\{[^}]*display:\s*none/s);
-  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-title-row\s*\{[^}]*min-width:\s*0[^}]*min-height:\s*0[^}]*height:\s*40px[^}]*overflow:\s*hidden/s);
-  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-header h1\s*\{[^}]*overflow:\s*hidden[^}]*font-size:\s*18px[^}]*text-overflow:\s*ellipsis[^}]*white-space:\s*nowrap/s);
-  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-live-state\s*\{[^}]*display:\s*none/s);
-  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-status-line\s*\{[^}]*grid-template-columns:\s*max-content max-content[^}]*width:\s*auto[^}]*min-height:\s*32px[^}]*overflow:\s*hidden/s);
-  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-status-line strong,\s*\.membrane-shell\.is-beautified \.membrane-status-line span\s*\{[^}]*min-height:\s*32px[^}]*font-size:\s*11px[^}]*white-space:\s*nowrap/s);
-  assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-status-line span:last-child\s*\{[^}]*display:\s*none/s);
+  assert.match(mobile, /\.membrane-shell\.is-beautified\s*\{[^}]*grid-template-rows:\s*clamp\(48px, 9svh, 56px\) minmax\(0, 1fr\) clamp\(64px, 10svh, 82px\)/s);
+  assert.match(mobile, /padding-top:\s*max\(4px, env\(safe-area-inset-top\)\)/);
+  assert.match(mobile, /padding-right:\s*max\(4px, env\(safe-area-inset-right\)\)/);
+  assert.match(mobile, /padding-bottom:\s*max\(4px, env\(safe-area-inset-bottom\)\)/);
+  assert.match(mobile, /padding-left:\s*max\(4px, env\(safe-area-inset-left\)\)/);
+  assert.match(mobile, /-webkit-text-size-adjust:\s*100%/);
+  assert.match(mobile, /text-size-adjust:\s*100%/);
 });
 
-test("beautified short phone keeps the compact header's 54px grid row", async () => {
+test("beautified short phone compacts spacing without imposing fixed content minimums", async () => {
   const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
   const shortMobile = cssMediaRules(css, "max-width: 800px) and (max-height: 700px");
 
-  assert.match(shortMobile, /\.membrane-shell\.is-beautified\s*\{[^}]*grid-template-rows:\s*54px minmax\(0, 1fr\) 74px/s);
-});
-
-test("beautified short phone reserves a 196px compact curve row", async () => {
-  const css = await source("models/03-membrane-potential-curve/membrane-beautified.css");
-  const shortMobile = cssMediaRules(css, "max-width: 800px) and (max-height: 700px");
-
-  assert.match(shortMobile, /\.membrane-shell\.is-beautified \.membrane-lab-workspace\s*\{[^}]*grid-template-rows:\s*196px minmax\(200px, 1fr\) 28px 78px/s);
+  assert.doesNotMatch(shortMobile, /grid-template-rows:\s*\d+px minmax\(\d+px, 1fr\) \d+px \d+px/);
+  assert.match(shortMobile, /grid-template-rows:\s*clamp\(128px, 23svh, 196px\)\s*minmax\(0, 1fr\)\s*clamp\(25px, 4svh, 32px\)\s*clamp\(104px, 19svh, 116px\)/s);
+  assert.match(shortMobile, /\.membrane-shell\.is-beautified \.membrane-lab-workspace\s*\{[^}]*gap:\s*3px/s);
 });
 
 test("beautified mobile explanation prioritizes cause and result", async () => {
@@ -303,7 +316,7 @@ test("beautified mobile control dock tracks fit their shell rows", async () => {
   const shortMobile = cssMediaRules(css, "max-width: 800px) and (max-height: 700px");
 
   assert.match(mobile, /\.membrane-shell\.is-beautified \.membrane-control-dock\s*\{[^}]*grid-template-rows:\s*40px 28px[^}]*gap:\s*4px 6px[^}]*padding:\s*3px 6px/s);
-  assert.match(shortMobile, /\.membrane-shell\.is-beautified \.membrane-control-dock\s*\{[^}]*grid-template-rows:\s*36px 28px[^}]*gap:\s*2px 6px[^}]*padding:\s*2px 5px/s);
+  assert.match(shortMobile, /\.membrane-shell\.is-beautified \.membrane-control-dock\s*\{[^}]*grid-template-rows:\s*34px 24px[^}]*gap:\s*2px 6px[^}]*padding:\s*2px 5px/s);
 });
 
 test("beautified tablet uses a mechanism-first two-column workbench at 801, 900, and 927px", async () => {

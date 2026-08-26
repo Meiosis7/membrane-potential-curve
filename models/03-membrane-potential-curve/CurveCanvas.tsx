@@ -198,7 +198,10 @@ export function CurveCanvas({
           <span>膜电位曲线</span>
           <small>播放形成曲线，也可拖动回看</small>
         </div>
-        <strong>{formatMembranePotential(snapshot.mv)}</strong>
+        <div className="membrane-curve-state" aria-label="当前膜电位状态">
+          <span className="membrane-curve-stage">{stageLabel(snapshot.stage)}</span>
+          <strong>{formatMembranePotential(snapshot.mv)}</strong>
+        </div>
       </figcaption>
       <canvas
         ref={canvasRef}
