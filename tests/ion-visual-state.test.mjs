@@ -15,8 +15,8 @@ const restingSnapshot = {
 test("resting distribution shows sodium mainly outside and potassium mainly inside", () => {
   const state = getIonVisualState(0.4, "threshold", restingSnapshot);
 
-  assert.ok(state.sodium.outside > state.sodium.inside);
-  assert.ok(state.potassium.inside > state.potassium.outside);
+  assert.deepEqual(state.sodium, { outside: 9, inside: 2 });
+  assert.deepEqual(state.potassium, { outside: 2, inside: 8 });
   assert.equal(state.sodiumCrossing, false);
   assert.equal(state.potassiumCrossing, false);
 });
@@ -32,8 +32,8 @@ test("reversal polarization continues moving sodium particles inward", () => {
   });
 
   assert.ok(state.sodium.inside > 2);
-  assert.ok(state.sodium.outside < 7);
-  assert.equal(state.sodium.inside + state.sodium.outside, 9);
+  assert.ok(state.sodium.outside < 9);
+  assert.equal(state.sodium.inside + state.sodium.outside, 11);
   assert.equal(state.sodiumCrossing, true);
 });
 
@@ -47,8 +47,8 @@ test("potassium-out stages move potassium particles from inside to outside", () 
   });
 
   assert.ok(state.potassium.outside > 2);
-  assert.ok(state.potassium.inside < 6);
-  assert.equal(state.potassium.inside + state.potassium.outside, 8);
+  assert.ok(state.potassium.inside < 8);
+  assert.equal(state.potassium.inside + state.potassium.outside, 10);
   assert.equal(state.potassiumCrossing, true);
 });
 
@@ -62,7 +62,7 @@ test("potassium redistribution begins with repolarization after the sharp peak",
   });
 
   assert.ok(state.potassium.outside > 2);
-  assert.ok(state.potassium.inside < 6);
+  assert.ok(state.potassium.inside < 8);
 });
 
 test("stimulus pulse appears only near the onset of voltage change", () => {

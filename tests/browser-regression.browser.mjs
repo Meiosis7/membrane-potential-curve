@@ -757,6 +757,12 @@ test("production beautified route renders transparent outlined ions and phosphol
         potassiumBackground: getComputedStyle(potassium).backgroundColor,
         spriteDisplay: getComputedStyle(potassium, '::before').display,
         lipidBackground: getComputedStyle(lipid).backgroundImage,
+        counts: {
+          sodiumOutside: document.querySelectorAll('.membrane-extracellular .membrane-particle.sodium').length,
+          sodiumInside: document.querySelectorAll('.membrane-intracellular .membrane-particle.sodium').length,
+          potassiumOutside: document.querySelectorAll('.membrane-extracellular .membrane-particle.potassium').length,
+          potassiumInside: document.querySelectorAll('.membrane-intracellular .membrane-particle.potassium').length,
+        },
         upperTail: {
           content: upperTail.content,
           background: upperTail.backgroundImage,
@@ -780,6 +786,12 @@ test("production beautified route renders transparent outlined ions and phosphol
     assert.equal(visuals.potassiumBackground, "rgba(0, 0, 0, 0)");
     assert.equal(visuals.spriteDisplay, "none");
     assert.equal(visuals.lipidBackground, "none");
+    assert.deepEqual(visuals.counts, {
+      sodiumOutside: 9,
+      sodiumInside: 2,
+      potassiumOutside: 2,
+      potassiumInside: 8,
+    }, `resting ion counts must show the concentration gradient at ${scenario.width}px`);
     assert.equal((visuals.upperTail.background.match(/radial-gradient/g) || []).length, 1);
     assert.equal((visuals.upperTail.background.match(/linear-gradient/g) || []).length, 2);
     assert.equal((visuals.lowerTail.background.match(/radial-gradient/g) || []).length, 1);

@@ -15,8 +15,8 @@ export interface IonVisualState {
 }
 
 const BASE_COUNTS = {
-  sodium: { outside: 7, inside: 2 },
-  potassium: { outside: 2, inside: 6 },
+  sodium: { outside: 9, inside: 2 },
+  potassium: { outside: 2, inside: 8 },
 } as const;
 
 function clampUnit(value: number) {

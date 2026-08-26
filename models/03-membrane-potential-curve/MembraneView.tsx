@@ -25,6 +25,8 @@ const PARTICLE_POSITIONS = {
     { left: "76%", top: "31%" },
     { left: "88%", top: "64%" },
     { left: "55%", top: "48%" },
+    { left: "23%", top: "49%" },
+    { left: "69%", top: "50%" },
   ],
   sodiumInside: [
     { left: "37%", top: "35%" },
@@ -47,6 +49,8 @@ const PARTICLE_POSITIONS = {
     { left: "61%", top: "69%" },
     { left: "78%", top: "37%" },
     { left: "89%", top: "65%" },
+    { left: "21%", top: "52%" },
+    { left: "70%", top: "54%" },
   ],
 } satisfies Record<string, ParticlePosition[]>;
 
